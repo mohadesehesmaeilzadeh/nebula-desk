@@ -1,16 +1,75 @@
-# React + Vite
+# NebulaDesk
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+NebulaDesk is a frontend-only interactive web operating system and personal
+React portfolio. The project will present portfolio content through a fictional
+desktop environment instead of a traditional multi-section page.
 
-Currently, two official plugins are available:
+## Current Status
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Phase 0 &mdash; Repository Preparation
 
-## React Compiler
+The repository is currently being prepared for future NebulaDesk development.
+This phase removes the starter UI, establishes source organization, and adds
+global styling foundations.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Planned MVP
 
-## Expanding the Oxlint configuration
+- Boot Screen
+- Lock Screen
+- Desktop
+- Taskbar
+- Start Menu
+- Reusable windows
+- About
+- Projects
+- Terminal
+- Settings
+- Responsive mobile behavior
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Technology
+
+- React
+- JavaScript
+- HTML
+- CSS
+- Vite
+
+## Frontend-Only Constraints
+
+NebulaDesk does not require:
+
+- Backend
+- Database
+- Authentication
+- External API
+
+Local static data and browser storage may be used for portfolio content,
+preferences, and lightweight persistence.
+
+## Local Development
+
+```bash
+npm install
+npm run dev
+npm run lint
+npm run build
+```
+
+## Roadmap
+
+- Phase 0 &mdash; Repository Preparation
+- Phase 1 &mdash; System Flow
+- Phase 2 &mdash; Desktop Shell
+- Phase 3 &mdash; Window Manager
+- Phase 4 &mdash; Taskbar and Start Menu
+- Phase 5 &mdash; MVP Applications
+- Phase 6 &mdash; Themes and Persistence
+- Phase 7 &mdash; Responsive Mobile Behavior
+- Phase 8 &mdash; Additional Applications
+- Phase 9 &mdash; Accessibility and Keyboard Support
+- Phase 10 &mdash; Testing and Performance
+- Phase 11 &mdash; Portfolio Content and Deployment
+
+## License
+
+No license file is currently included.
