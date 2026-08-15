@@ -1,0 +1,308 @@
+.system-screen {
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  align-items: center;
+  justify-items: center;
+  place-items: center;
+  padding: clamp(18px, 4vw, 48px);
+  overflow: hidden;
+  color: var(--color-text-primary);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(167, 139, 250, 0.22), transparent 34rem),
+    radial-gradient(circle at 78% 16%, rgba(110, 231, 249, 0.16), transparent 32rem),
+    linear-gradient(140deg, var(--color-background-deep), var(--color-background));
+}
+
+.system-screen::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, transparent, black 18%, black 76%, transparent);
+}
+
+.system-panel,
+.lock-content,
+.sleep-content,
+.powered-off-content {
+  position: relative;
+  z-index: 1;
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 620px);
+  padding: clamp(26px, 6vw, 48px);
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(22px);
+  animation: scale-in var(--transition-normal) both;
+}
+
+.compact-panel {
+  width: min(100%, 520px);
+}
+
+.system-logo {
+  display: inline-grid;
+  width: clamp(58px, 14vw, 76px);
+  aspect-ratio: 1;
+  place-items: center;
+  margin-bottom: 22px;
+  font-family: var(--font-family-mono);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-background-deep);
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
+  border-radius: 22px;
+  box-shadow: 0 0 34px rgba(110, 231, 249, 0.28);
+  animation: system-logo-breathe 1.7s ease-in-out infinite alternate;
+}
+
+.system-eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--font-family-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--color-accent);
+  text-transform: uppercase;
+}
+
+.system-panel h1,
+.lock-content h1,
+.sleep-content h1,
+.powered-off-content h1 {
+  margin: 0;
+  max-width: 100%;
+  font-size: clamp(2.15rem, 13cqw, 4.7rem);
+  line-height: 1;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.system-copy,
+.system-hint,
+.lock-date {
+  color: var(--color-text-muted);
+}
+
+.system-copy {
+  margin: 18px auto 0;
+  max-width: 34rem;
+  line-height: 1.65;
+}
+
+.system-hint {
+  margin: 18px 0 0;
+  font-size: 0.95rem;
+}
+
+.system-button {
+  min-height: 46px;
+  margin-top: 26px;
+  padding: 11px 20px;
+  color: var(--color-background-deep);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
+  border: 1px solid transparent;
+  border-radius: var(--radius-round);
+  box-shadow: 0 14px 36px rgba(110, 231, 249, 0.16);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    filter var(--transition-fast);
+}
+
+.system-button:hover {
+  filter: brightness(1.07);
+  transform: translateY(-1px);
+  box-shadow: 0 18px 44px rgba(110, 231, 249, 0.24);
+}
+
+.system-button-secondary {
+  color: var(--color-text-primary);
+  background: var(--color-surface-subtle);
+  border-color: var(--color-border);
+  box-shadow: none;
+}
+
+.boot-panel {
+  width: min(100%, 560px);
+}
+
+.boot-progress-group {
+  margin-top: 30px;
+}
+
+.boot-progress-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+  font-family: var(--font-family-mono);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  text-align: left;
+}
+
+.boot-progress-track {
+  height: 10px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-round);
+}
+
+.boot-progress-track span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-secondary));
+  border-radius: inherit;
+  box-shadow: 0 0 22px rgba(110, 231, 249, 0.42);
+  transition: width var(--transition-normal);
+}
+
+.lock-screen {
+  background:
+    linear-gradient(rgba(3, 4, 10, 0.2), rgba(3, 4, 10, 0.5)),
+    radial-gradient(circle at 30% 18%, rgba(110, 231, 249, 0.18), transparent 34rem),
+    radial-gradient(circle at 72% 28%, rgba(167, 139, 250, 0.22), transparent 36rem),
+    var(--color-background);
+}
+
+.lock-content {
+  width: min(100%, 680px);
+  background: rgba(18, 22, 42, 0.58);
+}
+
+.lock-date {
+  margin: 0 0 14px;
+  font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+.lock-time {
+  letter-spacing: 0;
+}
+
+.sleep-screen {
+  cursor: pointer;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(110, 231, 249, 0.1), transparent 22rem),
+    #01020a;
+}
+
+.sleep-content {
+  width: min(100%, 520px);
+  background: rgba(8, 10, 20, 0.72);
+}
+
+.sleep-pulse {
+  width: 12px;
+  aspect-ratio: 1;
+  margin: 0 auto 22px;
+  background: var(--color-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 28px rgba(110, 231, 249, 0.7);
+  animation: sleep-pulse 1.5s ease-in-out infinite;
+}
+
+.shutdown-screen {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(167, 139, 250, 0.12), transparent 26rem),
+    #02030a;
+}
+
+.powered-off-screen {
+  background: #000;
+}
+
+.powered-off-screen::before {
+  display: none;
+}
+
+.powered-off-content {
+  width: min(100%, 620px);
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.powered-off-content h1 {
+  font-size: clamp(2rem, 10cqw, 4.2rem);
+  white-space: nowrap;
+}
+
+.power-glyph {
+  position: relative;
+  width: 58px;
+  aspect-ratio: 1;
+  margin: 0 auto 24px;
+  border: 3px solid var(--color-accent);
+  border-top-color: transparent;
+  border-radius: 50%;
+  box-shadow: 0 0 26px rgba(110, 231, 249, 0.24);
+}
+
+.power-glyph::before {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  width: 3px;
+  height: 28px;
+  content: "";
+  background: var(--color-accent);
+  border-radius: var(--radius-round);
+  transform: translateX(-50%);
+}
+
+@keyframes system-logo-breathe {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes sleep-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.86);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .system-panel,
+  .lock-content,
+  .sleep-content,
+  .powered-off-content {
+    padding: 24px;
+  }
+
+  .boot-progress-meta {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+
+  .system-button {
+    width: 100%;
+  }
+}
