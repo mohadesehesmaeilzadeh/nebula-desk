@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
+import { useClock } from '../../hooks/useClock'
 
 function LockScreen({ onUnlock }) {
-  const [now, setNow] = useState(() => new Date())
+  const now = useClock()
 
   const timeFormatter = useMemo(
     () =>
@@ -21,14 +22,6 @@ function LockScreen({ onUnlock }) {
       }),
     [],
   )
-
-  useEffect(() => {
-    const clockTimer = window.setInterval(() => {
-      setNow(new Date())
-    }, 1000)
-
-    return () => window.clearInterval(clockTimer)
-  }, [])
 
   return (
     <main className="system-screen lock-screen" aria-labelledby="lock-title">
