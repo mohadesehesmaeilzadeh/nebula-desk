@@ -40,14 +40,33 @@ function AppIconGlyph({ icon }) {
   )
 }
 
-function DesktopIcon({ app, selected, onSelect, onOpen }) {
+function DesktopIcon({ app, selected, openOnSingleClick, onSelect, onOpen }) {
   function handleClick(event) {
     event.stopPropagation()
     onSelect(app.id)
+
+    if (openOnSingleClick) {
+      onOpen(app.id)
+    }
   }
 
   function handleDoubleClick(event) {
     event.stopPropagation()
+
+    if (openOnSingleClick) {
+      return
+    }
+
+    onOpen(app.id)
+  }
+
+  function handleKeyDown(event) {
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    event.preventDefault()
+    onSelect(app.id)
     onOpen(app.id)
   }
 
@@ -60,6 +79,7 @@ function DesktopIcon({ app, selected, onSelect, onOpen }) {
       data-selected={selected ? 'true' : 'false'}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
+      onKeyDown={handleKeyDown}
     >
       <AppIconGlyph icon={app.icon} />
       <span className="desktop-icon-label">{app.name}</span>

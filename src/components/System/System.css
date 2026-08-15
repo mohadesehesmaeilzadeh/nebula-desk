@@ -1,3 +1,14 @@
+.system-root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-background);
+}
+
+.system-desktop-stage {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 .system-screen {
   position: relative;
   display: grid;

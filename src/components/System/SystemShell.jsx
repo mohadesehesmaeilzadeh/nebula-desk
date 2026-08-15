@@ -32,6 +32,8 @@ function getInitialSystemStatus() {
 
 function SystemShell() {
   const [status, setStatus] = useState(getInitialSystemStatus)
+  const [desktopSessionId, setDesktopSessionId] = useState(0)
+  const [hasDesktopSession, setHasDesktopSession] = useState(false)
 
   const handleBootComplete = useCallback(() => {
     markSessionBootComplete()
@@ -39,6 +41,7 @@ function SystemShell() {
   }, [])
 
   const handleUnlock = useCallback(() => {
+    setHasDesktopSession(true)
     setStatus(SYSTEM_STATUS.DESKTOP)
   }, [])
 
@@ -51,10 +54,14 @@ function SystemShell() {
   }, [])
 
   const handleRestart = useCallback(() => {
+    setHasDesktopSession(false)
+    setDesktopSessionId((sessionId) => sessionId + 1)
     setStatus(SYSTEM_STATUS.BOOTING)
   }, [])
 
   const handleShutdown = useCallback(() => {
+    setHasDesktopSession(false)
+    setDesktopSessionId((sessionId) => sessionId + 1)
     setStatus(SYSTEM_STATUS.SHUTTING_DOWN)
   }, [])
 
@@ -93,28 +100,44 @@ function SystemShell() {
     }
   }, [handleUnlock, handleWake, status])
 
-  switch (status) {
-    case SYSTEM_STATUS.BOOTING:
-      return <BootScreen onComplete={handleBootComplete} />
-    case SYSTEM_STATUS.LOCKED:
-      return <LockScreen onUnlock={handleUnlock} />
-    case SYSTEM_STATUS.DESKTOP:
-      return (
-        <Desktop
-          onSleep={handleSleep}
-          onRestart={handleRestart}
-          onShutdown={handleShutdown}
-        />
-      )
-    case SYSTEM_STATUS.SLEEPING:
-      return <SleepScreen onWake={handleWake} />
-    case SYSTEM_STATUS.SHUTTING_DOWN:
-      return <ShutdownScreen onShutdownComplete={handleShutdownComplete} />
-    case SYSTEM_STATUS.POWERED_OFF:
-      return <PoweredOffScreen onPowerOn={handlePowerOn} />
-    default:
-      return <BootScreen onComplete={handleBootComplete} />
+  function renderSystemScreen() {
+    switch (status) {
+      case SYSTEM_STATUS.BOOTING:
+        return <BootScreen onComplete={handleBootComplete} />
+      case SYSTEM_STATUS.LOCKED:
+        return <LockScreen onUnlock={handleUnlock} />
+      case SYSTEM_STATUS.DESKTOP:
+        return null
+      case SYSTEM_STATUS.SLEEPING:
+        return <SleepScreen onWake={handleWake} />
+      case SYSTEM_STATUS.SHUTTING_DOWN:
+        return <ShutdownScreen onShutdownComplete={handleShutdownComplete} />
+      case SYSTEM_STATUS.POWERED_OFF:
+        return <PoweredOffScreen onPowerOn={handlePowerOn} />
+      default:
+        return <BootScreen onComplete={handleBootComplete} />
+    }
   }
+
+  return (
+    <div className="system-root">
+      {hasDesktopSession && (
+        <div
+          className="system-desktop-stage"
+          hidden={status !== SYSTEM_STATUS.DESKTOP}
+          aria-hidden={status !== SYSTEM_STATUS.DESKTOP}
+        >
+          <Desktop
+            key={desktopSessionId}
+            onSleep={handleSleep}
+            onRestart={handleRestart}
+            onShutdown={handleShutdown}
+          />
+        </div>
+      )}
+      {renderSystemScreen()}
+    </div>
+  )
 }
 
 export default SystemShell
