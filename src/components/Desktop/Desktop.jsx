@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { applications } from '../../data/applications'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
+import StartMenu from '../StartMenu/StartMenu'
 import Taskbar from '../Taskbar/Taskbar'
 import WindowLayer from '../Window/WindowLayer'
 import useWindowManager from '../Window/useWindowManager'
@@ -11,24 +12,86 @@ const applicationById = new Map(applications.map((app) => [app.id, app]))
 
 function Desktop({ onSleep, onRestart, onShutdown }) {
   const desktopRef = useRef(null)
+  const startButtonRef = useRef(null)
   const [selectedAppId, setSelectedAppId] = useState(null)
+  const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
+  const [recentAppIds, setRecentAppIds] = useState([])
   const isMobileWindowMode = useMediaQuery('(max-width: 767px)')
   const windowManager = useWindowManager(desktopRef)
   const desktopApplications = applications.filter((app) => app.showOnDesktop)
-  const minimizedWindows = Object.values(windowManager.windows).filter(
-    (windowState) => windowState.isOpen && windowState.isMinimized,
-  )
+  const startMenuApplications = applications.filter((app) => app.showInStartMenu)
+  const runningApps = Object.values(windowManager.windows)
+    .filter((windowState) => windowState.isOpen)
+    .map((windowState) => ({
+      app: applicationById.get(windowState.appId),
+      windowState,
+    }))
+    .filter((entry) => entry.app)
+    .sort((a, b) => a.windowState.zIndex - b.windowState.zIndex)
+  const recentApps = recentAppIds
+    .map((appId) => applicationById.get(appId))
+    .filter(Boolean)
 
-  function handleClearSelection() {
-    setSelectedAppId(null)
+  const closeStartMenu = useCallback(() => {
+    setIsStartMenuOpen(false)
+  }, [])
+
+  function updateRecentApps(appId) {
+    setRecentAppIds((currentAppIds) =>
+      [appId, ...currentAppIds.filter((currentAppId) => currentAppId !== appId)].slice(0, 4),
+    )
   }
+
+  function launchApplication(appId) {
+    windowManager.openWindow(appId)
+    updateRecentApps(appId)
+    closeStartMenu()
+  }
+
+  function handleDesktopClick() {
+    setSelectedAppId(null)
+    closeStartMenu()
+  }
+
+  function handleToggleStartMenu() {
+    setIsStartMenuOpen((isOpen) => !isOpen)
+  }
+
+  function handleTaskbarAppClick(appId) {
+    const windowState = windowManager.windows[appId]
+
+    closeStartMenu()
+
+    if (!windowState) {
+      return
+    }
+
+    if (windowState.isMinimized) {
+      windowManager.restoreMinimizedWindow(appId)
+      return
+    }
+
+    if (windowManager.activeWindowId === appId) {
+      windowManager.minimizeWindow(appId)
+      return
+    }
+
+    windowManager.focusWindow(appId)
+  }
+
+  const handleWindowInteract = useCallback(
+    () => {
+      closeStartMenu()
+    },
+    [closeStartMenu],
+  )
 
   function handleSelectApplication(appId) {
     setSelectedAppId(appId)
   }
 
   function handleOpenApplication(appId) {
-    windowManager.openWindow(appId)
+    launchApplication(appId)
   }
 
   return (
@@ -36,7 +99,7 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
       ref={desktopRef}
       className="desktop"
       aria-labelledby="desktop-title"
-      onClick={handleClearSelection}
+      onClick={handleDesktopClick}
     >
       <section className="desktop-workspace" aria-label="Desktop workspace">
         <header className="desktop-brand" aria-labelledby="desktop-title">
@@ -56,7 +119,6 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
             />
           ))}
         </div>
-
       </section>
       <WindowLayer
         windows={windowManager.windows}
@@ -68,50 +130,30 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
         onMaximize={windowManager.maximizeWindow}
         onRestore={windowManager.restoreWindow}
         onMove={windowManager.moveWindow}
+        onInteract={handleWindowInteract}
       />
-      {/* Temporary Phase 3 system and minimized-window controls.
-          These will move into Start Menu and Taskbar surfaces in later phases. */}
-      <section
-        className="desktop-dev-controls"
-        aria-label="Temporary Phase 3 controls"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <div className="desktop-dev-control-group" aria-label="Temporary system controls">
-          <span>System</span>
-          <button type="button" onClick={onSleep}>
-            Sleep
-          </button>
-          <button type="button" onClick={onRestart}>
-            Restart
-          </button>
-          <button type="button" onClick={onShutdown}>
-            Shut Down
-          </button>
-        </div>
-        {minimizedWindows.length > 0 && (
-          <div className="desktop-dev-control-group" aria-label="Temporary minimized app restore controls">
-            <span>Restore</span>
-            {minimizedWindows.map((windowState) => {
-              const app = applicationById.get(windowState.appId)
-
-              if (!app) {
-                return null
-              }
-
-              return (
-                <button
-                  key={windowState.appId}
-                  type="button"
-                  onClick={() => windowManager.restoreMinimizedWindow(windowState.appId)}
-                >
-                  {app.name}
-                </button>
-              )
-            })}
-          </div>
-        )}
-      </section>
-      <Taskbar />
+      {isStartMenuOpen && (
+        <StartMenu
+          id="nebuladesk-start-menu"
+          applications={startMenuApplications}
+          recentApps={recentApps}
+          isMobile={isMobileWindowMode}
+          onLaunchApp={launchApplication}
+          onSleep={onSleep}
+          onRestart={onRestart}
+          onShutdown={onShutdown}
+          onClose={closeStartMenu}
+        />
+      )}
+      <Taskbar
+        runningApps={runningApps}
+        activeWindowId={windowManager.activeWindowId}
+        isStartMenuOpen={isStartMenuOpen}
+        startMenuId="nebuladesk-start-menu"
+        startButtonRef={startButtonRef}
+        onToggleStartMenu={handleToggleStartMenu}
+        onTaskbarAppClick={handleTaskbarAppClick}
+      />
     </main>
   )
 }

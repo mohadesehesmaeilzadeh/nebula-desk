@@ -169,59 +169,8 @@
   -webkit-line-clamp: 2;
 }
 
-.desktop-dev-controls {
-  position: absolute;
-  top: clamp(18px, 3vw, 34px);
-  right: clamp(16px, 3vw, 36px);
-  z-index: calc(var(--z-overlay) - 1);
-  display: grid;
-  gap: 8px;
-  padding: 8px;
-  background: rgba(18, 22, 42, 0.44);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-large);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(18px);
-}
-
-.desktop-dev-control-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.desktop-dev-control-group span {
-  padding: 0 8px;
-  font-family: var(--font-family-mono);
-  font-size: 0.72rem;
-  color: var(--color-text-muted);
-  text-transform: uppercase;
-}
-
-.desktop-dev-control-group button {
-  min-height: 36px;
-  padding: 7px 12px;
-  color: var(--color-text-primary);
-  background: var(--color-surface-subtle);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-round);
-  transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast),
-    transform var(--transition-fast);
-}
-
-.desktop-dev-control-group button:hover {
-  background: rgba(110, 231, 249, 0.12);
-  border-color: var(--color-border-strong);
-  transform: translateY(-1px);
-}
-
 @supports not (backdrop-filter: blur(18px)) {
-  .desktop-brand,
-  .desktop-dev-controls {
+  .desktop-brand {
     background: rgba(18, 22, 42, 0.9);
   }
 }
@@ -270,26 +219,5 @@
 
   .desktop-icon {
     min-height: 112px;
-  }
-
-  .desktop-dev-controls {
-    right: 14px;
-    left: 14px;
-    width: 100%;
-    max-width: calc(100% - 28px);
-    border-radius: var(--radius-large);
-  }
-
-  .desktop-dev-control-group {
-    justify-content: center;
-  }
-
-  .desktop-dev-control-group span {
-    width: 100%;
-    text-align: center;
-  }
-
-  .desktop-dev-control-group button {
-    flex: 1 1 92px;
   }
 }

@@ -14,6 +14,7 @@ function WindowLayer({
   onMaximize,
   onRestore,
   onMove,
+  onInteract,
 }) {
   const openWindows = Object.values(windows).filter((windowState) => windowState.isOpen)
   const visibleWindows = openWindows.filter((windowState) => !windowState.isMinimized)
@@ -30,6 +31,7 @@ function WindowLayer({
       className="window-layer"
       data-mobile={isMobile ? 'true' : 'false'}
       aria-label="Open application windows"
+      onPointerDownCapture={onInteract}
     >
       {renderedWindows.map((windowState) => {
         const app = applicationById.get(windowState.appId)

@@ -235,8 +235,8 @@
 @media (max-width: 767px) {
   .window-layer[data-mobile="true"] {
     position: fixed;
-    inset: 0;
-    z-index: var(--z-overlay);
+    inset: 0 0 calc(var(--taskbar-height) + env(safe-area-inset-bottom)) 0;
+    z-index: var(--z-window);
   }
 
   .window-layer[data-mobile="true"] .window {

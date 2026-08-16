@@ -1,4 +1,4 @@
-function AppIconGlyph({ icon }) {
+export function AppIconGlyph({ icon }) {
   const iconClassName = `desktop-icon-glyph desktop-icon-glyph-${icon}`
 
   return (
