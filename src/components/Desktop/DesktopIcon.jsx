@@ -1,6 +1,7 @@
 export function AppIconGlyph({ icon }) {
   const iconClassName = `desktop-icon-glyph desktop-icon-glyph-${icon}`
 
+  
   return (
     <span className={iconClassName} aria-hidden="true">
       <svg viewBox="0 0 48 48" focusable="false">
