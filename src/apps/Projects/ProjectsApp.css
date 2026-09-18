@@ -254,3 +254,48 @@
     border-radius: var(--radius-small);
   }
 }
+
+@media (max-width: 767px) {
+  .projects-app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    overflow: hidden;
+  }
+
+  .projects-app[data-detail-visible="false"] .project-details,
+  .projects-app[data-detail-visible="false"] .project-mobile-toolbar {
+    display: none;
+  }
+
+  .projects-app[data-detail-visible="true"] {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .projects-app[data-detail-visible="true"] .project-list-pane {
+    display: none;
+  }
+
+  .projects-app[data-detail-visible="true"] .project-mobile-toolbar {
+    display: block;
+  }
+
+  .project-list-pane,
+  .project-details {
+    min-height: 0;
+  }
+
+  .project-mobile-toolbar button {
+    min-height: 44px;
+    padding: 9px 12px;
+    color: var(--color-text-primary);
+    background: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-small);
+  }
+
+  .project-resource-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}

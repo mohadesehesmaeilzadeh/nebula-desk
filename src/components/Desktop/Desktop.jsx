@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { applications } from '../../data/applications'
-import { useMediaQuery } from '../../hooks/useMediaQuery'
+import { MOBILE_MEDIA_QUERY, useMediaQuery } from '../../hooks/useMediaQuery'
 import StartMenu from '../StartMenu/StartMenu'
 import Taskbar from '../Taskbar/Taskbar'
 import WindowLayer from '../Window/WindowLayer'
@@ -16,7 +16,7 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
   const [selectedAppId, setSelectedAppId] = useState(null)
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
   const [recentAppIds, setRecentAppIds] = useState([])
-  const isMobileWindowMode = useMediaQuery('(max-width: 767px)')
+  const isMobileWindowMode = useMediaQuery(MOBILE_MEDIA_QUERY)
   const windowManager = useWindowManager(desktopRef)
   const desktopApplications = applications.filter((app) => app.showOnDesktop)
   const startMenuApplications = applications.filter((app) => app.showInStartMenu)
@@ -72,7 +72,7 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
     }
 
     if (windowManager.activeWindowId === appId) {
-      windowManager.minimizeWindow(appId)
+      windowManager.minimizeWindow(appId, isMobileWindowMode)
       return
     }
 
@@ -94,11 +94,21 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
     launchApplication(appId)
   }
 
+  function handleCloseWindow(appId) {
+    windowManager.closeWindow(appId, isMobileWindowMode)
+  }
+
+  function handleMinimizeWindow(appId) {
+    windowManager.minimizeWindow(appId, isMobileWindowMode)
+  }
+
   return (
     <main
       ref={desktopRef}
       className="desktop"
       aria-labelledby="desktop-title"
+      data-mobile={isMobileWindowMode ? 'true' : 'false'}
+      data-start-menu-open={isStartMenuOpen ? 'true' : 'false'}
       onClick={handleDesktopClick}
     >
       <section className="desktop-workspace" aria-label="Desktop workspace">
@@ -124,9 +134,9 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
         windows={windowManager.windows}
         activeWindowId={windowManager.activeWindowId}
         isMobile={isMobileWindowMode}
-        onClose={windowManager.closeWindow}
+        onClose={handleCloseWindow}
         onFocus={windowManager.focusWindow}
-        onMinimize={windowManager.minimizeWindow}
+        onMinimize={handleMinimizeWindow}
         onMaximize={windowManager.maximizeWindow}
         onRestore={windowManager.restoreWindow}
         onMove={windowManager.moveWindow}
@@ -149,6 +159,7 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
       <Taskbar
         runningApps={runningApps}
         activeWindowId={windowManager.activeWindowId}
+        isMobile={isMobileWindowMode}
         isStartMenuOpen={isStartMenuOpen}
         startMenuId="nebuladesk-start-menu"
         startButtonRef={startButtonRef}

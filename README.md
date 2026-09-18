@@ -6,11 +6,13 @@ desktop environment instead of a traditional multi-section page.
 
 ## Current Status
 
-Phase 6 &mdash; Themes &amp; Persistence
+Phase 7 &mdash; Responsive Mobile Experience
 
 The repository now includes the core NebulaDesk system shell, desktop
 environment, window manager, taskbar, Start Menu, functional MVP applications,
-and persistent interface personalization.
+and persistent interface personalization. Desktop viewports retain floating,
+draggable windows, while mobile viewports use focused fullscreen applications,
+touch-sized controls, a compact taskbar, and a dismissible Start Menu sheet.
 
 NebulaDesk stores theme, accent, sound, and animation preferences locally in
 the browser using LocalStorage. No preference data is sent to a server.

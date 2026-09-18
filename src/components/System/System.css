@@ -298,6 +298,15 @@
   }
 }
 
+@media (max-width: 767px) {
+  .system-screen {
+    padding-top: max(18px, env(safe-area-inset-top));
+    padding-right: max(18px, env(safe-area-inset-right));
+    padding-bottom: max(18px, env(safe-area-inset-bottom));
+    padding-left: max(18px, env(safe-area-inset-left));
+  }
+}
+
 @media (max-width: 520px) {
   .system-panel,
   .lock-content,
@@ -314,5 +323,11 @@
 
   .system-button {
     width: 100%;
+  }
+}
+
+@media (hover: none) {
+  .system-button:hover {
+    transform: none;
   }
 }

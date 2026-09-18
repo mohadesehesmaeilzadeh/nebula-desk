@@ -235,3 +235,31 @@
     padding: 12px;
   }
 }
+
+@media (max-width: 767px) {
+  .about-app {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+  }
+
+  .about-sidebar {
+    flex-flow: row nowrap;
+    min-height: 0;
+    padding: 8px;
+  }
+
+  .about-section-button {
+    min-height: 44px;
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .about-panel {
+    min-height: 0;
+  }
+
+  .about-profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

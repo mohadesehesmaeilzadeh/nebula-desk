@@ -110,6 +110,7 @@ function Window({
       style={windowStyle}
       tabIndex="-1"
       aria-labelledby={titleId}
+      data-app-id={app.id}
       data-active={isActive ? 'true' : 'false'}
       data-mobile={isMobile ? 'true' : 'false'}
       onPointerDown={handleWindowPointerDown}
@@ -119,7 +120,9 @@ function Window({
         app={app}
         titleId={titleId}
         isActive={isActive}
+        isMobile={isMobile}
         isMaximized={windowState.isMaximized}
+        onBack={() => onMinimize(app.id)}
         onMinimize={() => onMinimize(app.id)}
         onMaximize={() => onMaximize(app.id)}
         onRestore={() => onRestore(app.id)}

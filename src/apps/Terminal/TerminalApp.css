@@ -79,4 +79,8 @@
     grid-template-columns: 1fr;
     gap: 4px;
   }
+
+  .terminal-input-row input {
+    font-size: 1rem;
+  }
 }

@@ -221,3 +221,20 @@
     min-height: 112px;
   }
 }
+
+@media (max-width: 767px) {
+  .desktop-workspace {
+    min-height: 100dvh;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-right: max(14px, env(safe-area-inset-right));
+    padding-left: max(14px, env(safe-area-inset-left));
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (hover: none) {
+  .desktop-icon:hover {
+    transform: none;
+  }
+}

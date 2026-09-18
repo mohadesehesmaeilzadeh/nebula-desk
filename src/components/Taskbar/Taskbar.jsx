@@ -5,14 +5,24 @@ import './Taskbar.css'
 function Taskbar({
   runningApps,
   activeWindowId,
+  isMobile,
   isStartMenuOpen,
   startMenuId,
   startButtonRef,
   onToggleStartMenu,
   onTaskbarAppClick,
 }) {
+  const visibleRunningApps = isMobile
+    ? runningApps.filter(({ windowState }) => windowState.appId === activeWindowId)
+    : runningApps
+
   return (
-    <nav className="taskbar" aria-label="NebulaDesk taskbar" onClick={(event) => event.stopPropagation()}>
+    <nav
+      className="taskbar"
+      aria-label="NebulaDesk taskbar"
+      data-mobile={isMobile ? 'true' : 'false'}
+      onClick={(event) => event.stopPropagation()}
+    >
       <button
         ref={startButtonRef}
         className="taskbar-nebula-button"
@@ -25,7 +35,7 @@ function Taskbar({
         <span className="taskbar-nebula-mark" aria-hidden="true" />
       </button>
       <div className="taskbar-running-apps" aria-label="Running applications">
-        {runningApps.map(({ app, windowState }) => {
+        {visibleRunningApps.map(({ app, windowState }) => {
           const state = windowState.isMinimized
             ? 'minimized'
             : windowState.appId === activeWindowId

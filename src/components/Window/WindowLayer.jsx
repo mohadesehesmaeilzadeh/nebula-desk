@@ -20,8 +20,16 @@ function WindowLayer({
 }) {
   const openWindows = Object.values(windows).filter((windowState) => windowState.isOpen)
   const visibleWindows = openWindows.filter((windowState) => !windowState.isMinimized)
+  const activeVisibleWindow = visibleWindows.find(
+    (windowState) => windowState.appId === activeWindowId,
+  )
+  const fallbackVisibleWindow = [...visibleWindows].sort(
+    (a, b) => b.zIndex - a.zIndex,
+  )[0]
   const renderedWindows = isMobile
-    ? visibleWindows.filter((windowState) => windowState.appId === activeWindowId).slice(-1)
+    ? activeWindowId === null
+      ? []
+      : [activeVisibleWindow || fallbackVisibleWindow].filter(Boolean)
     : visibleWindows
 
   if (renderedWindows.length === 0) {

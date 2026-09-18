@@ -58,6 +58,7 @@
   --z-desktop: 10;
   --z-window: 100;
   --z-taskbar: 500;
+  --z-menu-backdrop: 650;
   --z-menu: 700;
   --z-overlay: 900;
   --z-toast: 1000;

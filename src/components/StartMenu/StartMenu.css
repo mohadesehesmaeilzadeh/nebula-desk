@@ -16,12 +16,25 @@
   box-shadow: var(--shadow-panel);
   backdrop-filter: blur(20px);
   animation: start-menu-in var(--transition-normal) both;
+  overscroll-behavior: contain;
+}
+
+.start-menu-backdrop {
+  position: absolute;
+  inset: 0 0 calc(var(--taskbar-height) + env(safe-area-inset-bottom)) 0;
+  z-index: var(--z-menu-backdrop);
+  background: rgba(0, 0, 0, 0.38);
 }
 
 .start-menu-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 12px;
   align-items: center;
+}
+
+.start-menu-heading {
+  min-width: 0;
 }
 
 .start-menu-avatar {
@@ -56,6 +69,51 @@
 .start-menu-header h2 {
   margin-top: 3px;
   font-size: 1.15rem;
+  overflow-wrap: anywhere;
+}
+
+.start-menu-close {
+  position: relative;
+  display: none;
+  width: 44px;
+  aspect-ratio: 1;
+  place-items: center;
+  color: var(--color-text-primary);
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.start-menu-close span,
+.start-menu-close span::before,
+.start-menu-close span::after {
+  display: block;
+}
+
+.start-menu-close span {
+  position: relative;
+  width: 14px;
+  height: 14px;
+}
+
+.start-menu-close span::before,
+.start-menu-close span::after {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 14px;
+  height: 2px;
+  content: "";
+  background: currentColor;
+  border-radius: var(--radius-round);
+}
+
+.start-menu-close span::before {
+  transform: rotate(45deg);
+}
+
+.start-menu-close span::after {
+  transform: rotate(-45deg);
 }
 
 .start-menu-search input {
@@ -179,7 +237,7 @@
 }
 
 .start-menu-power button {
-  min-height: 40px;
+  min-height: 44px;
   flex: 1 1 96px;
   padding: 9px 12px;
   border-radius: var(--radius-round);
@@ -205,15 +263,27 @@
 }
 
 @media (max-width: 767px) {
+  .start-menu-backdrop {
+    position: fixed;
+  }
+
   .start-menu {
     right: max(10px, env(safe-area-inset-right));
     bottom: calc(var(--taskbar-height) + env(safe-area-inset-bottom) + 10px);
     left: max(10px, env(safe-area-inset-left));
     width: auto;
-    max-height: min(76dvh, 680px);
+    max-height: min(82dvh, 680px);
     padding: 16px;
     border-radius: 22px 22px var(--radius-large) var(--radius-large);
     animation-name: start-menu-mobile-in;
+  }
+
+  .start-menu-close {
+    display: grid;
+  }
+
+  .start-menu-search input {
+    font-size: 1rem;
   }
 
   .start-menu-app-grid {
@@ -222,6 +292,14 @@
 
   .start-menu-app-button {
     min-height: 96px;
+  }
+}
+
+@media (hover: none) {
+  .start-menu-app-button:hover,
+  .start-menu-recent-button:hover,
+  .start-menu-power button:hover {
+    transform: none;
   }
 }
 
