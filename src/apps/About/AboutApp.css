@@ -30,15 +30,15 @@
 .about-section-button:hover,
 .about-section-button[data-active="true"] {
   color: var(--color-text-primary);
-  background: rgba(110, 231, 249, 0.12);
-  border-color: var(--color-border);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
 }
 
 .about-panel {
   min-width: 0;
   padding: 16px;
   overflow: auto;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-small);
 }
@@ -60,7 +60,7 @@
   place-items: center;
   font-family: var(--font-family-mono);
   font-weight: 800;
-  color: var(--color-background-deep);
+  color: var(--color-text-on-accent);
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
   border-radius: var(--radius-small);
 }
@@ -167,7 +167,7 @@
 .about-chip-list li {
   padding: 8px 10px;
   color: var(--color-text-soft);
-  background: rgba(110, 231, 249, 0.1);
+  background: var(--color-accent-soft);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-round);
 }

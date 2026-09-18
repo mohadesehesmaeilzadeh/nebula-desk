@@ -18,6 +18,7 @@
 
 .settings-header p,
 .settings-header h2,
+.settings-header span,
 .settings-section p,
 .settings-section h3,
 .settings-fieldset,
@@ -39,12 +40,21 @@
   font-size: 1.4rem;
 }
 
+.settings-header span,
+.settings-reset-section span {
+  display: block;
+  margin-top: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
 .settings-section {
   display: grid;
   gap: 14px;
   min-width: 0;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--color-surface-raised);
 }
 
 .settings-section h3 {
@@ -100,8 +110,8 @@
 }
 
 .settings-radio-option:has(input:checked) {
-  background: rgba(110, 231, 249, 0.12);
-  border-color: var(--color-border-strong);
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
 }
 
 .settings-radio-option span {
@@ -139,6 +149,29 @@
   accent-color: var(--color-accent);
 }
 
+.settings-reset-section {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.settings-reset-section button {
+  min-height: 44px;
+  padding: 10px 14px;
+  color: var(--color-text-primary);
+  font-weight: 700;
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-small);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.settings-reset-section button:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+}
+
 @container (max-width: 420px) {
   .settings-option-grid,
   .settings-accent-grid {
@@ -147,5 +180,13 @@
 
   .settings-toggle-option {
     align-items: flex-start;
+  }
+
+  .settings-reset-section {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-reset-section button {
+    width: 100%;
   }
 }

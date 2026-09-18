@@ -30,8 +30,8 @@
   border-color: var(--color-border-strong);
   box-shadow:
     var(--shadow-panel),
-    0 0 0 1px rgba(110, 231, 249, 0.18),
-    0 0 48px rgba(110, 231, 249, 0.1);
+    0 0 0 1px var(--color-accent-border),
+    0 0 48px var(--color-accent-soft);
 }
 
 .window-dragging {
@@ -50,14 +50,14 @@
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   min-height: 46px;
-  background: rgba(255, 255, 255, 0.045);
+  background: var(--color-surface-raised);
   border-bottom: 1px solid var(--color-border);
 }
 
 .window-chrome[data-active="true"] {
   background:
-    linear-gradient(90deg, rgba(110, 231, 249, 0.1), transparent 42%),
-    rgba(255, 255, 255, 0.055);
+    linear-gradient(90deg, var(--color-accent-soft), transparent 42%),
+    var(--color-surface-subtle);
 }
 
 .window-drag-region {
@@ -82,7 +82,7 @@
   aspect-ratio: 1;
   background: linear-gradient(135deg, var(--color-accent), var(--color-accent-secondary));
   border-radius: 50%;
-  box-shadow: 0 0 16px rgba(110, 231, 249, 0.34);
+  box-shadow: 0 0 16px var(--color-accent-glow);
 }
 
 .window-title {
@@ -190,7 +190,7 @@
 }
 
 .window-control-close:hover {
-  color: var(--color-background-deep);
+  color: var(--color-text-on-accent);
   background: var(--color-accent);
   border-color: transparent;
 }

@@ -6,11 +6,14 @@ desktop environment instead of a traditional multi-section page.
 
 ## Current Status
 
-Phase 5 &mdash; MVP Applications
+Phase 6 &mdash; Themes &amp; Persistence
 
 The repository now includes the core NebulaDesk system shell, desktop
-environment, window manager, taskbar, Start Menu, and the first functional MVP
-applications for portfolio content.
+environment, window manager, taskbar, Start Menu, functional MVP applications,
+and persistent interface personalization.
+
+NebulaDesk stores theme, accent, sound, and animation preferences locally in
+the browser using LocalStorage. No preference data is sent to a server.
 
 ## Planned MVP
 

@@ -1,16 +1,6 @@
-import { usePreferences } from '../../context/PreferencesContext'
+import { ACCENTS, THEMES } from '../../data/preferences'
+import { usePreferences } from '../../hooks/usePreferences'
 import './SettingsApp.css'
-
-const themeOptions = [
-  { id: 'dark', label: 'Dark' },
-  { id: 'light', label: 'Light' },
-]
-
-const accentOptions = [
-  { id: 'cyan', label: 'Cyan' },
-  { id: 'purple', label: 'Purple' },
-  { id: 'blue', label: 'Blue' },
-]
 
 function RadioOption({ name, value, checked, label, onChange }) {
   return (
@@ -51,13 +41,15 @@ function SettingsApp() {
     setAccent,
     setAnimationsEnabled,
     setSoundEnabled,
+    resetPreferences,
   } = usePreferences()
 
   return (
     <div className="settings-app app-viewport">
       <header className="settings-header">
         <p>Control Center</p>
-        <h2>Runtime Settings</h2>
+        <h2>Personalization</h2>
+        <span>Preferences are saved automatically in this browser.</span>
       </header>
 
       <section className="settings-section" aria-labelledby="settings-appearance-title">
@@ -69,7 +61,7 @@ function SettingsApp() {
         <fieldset className="settings-fieldset">
           <legend>Theme</legend>
           <div className="settings-option-grid">
-            {themeOptions.map((option) => (
+            {THEMES.map((option) => (
               <RadioOption
                 key={option.id}
                 name="theme"
@@ -85,7 +77,7 @@ function SettingsApp() {
         <fieldset className="settings-fieldset">
           <legend>Accent color</legend>
           <div className="settings-option-grid settings-accent-grid">
-            {accentOptions.map((option) => (
+            {ACCENTS.map((option) => (
               <RadioOption
                 key={option.id}
                 name="accent"
@@ -108,7 +100,7 @@ function SettingsApp() {
         <ToggleOption
           id="settings-animations"
           label="Animations"
-          description="Decorative motion during this session"
+          description="Decorative motion and interface transitions"
           checked={preferences.animationsEnabled}
           onChange={setAnimationsEnabled}
         />
@@ -119,6 +111,17 @@ function SettingsApp() {
           checked={preferences.soundEnabled}
           onChange={setSoundEnabled}
         />
+      </section>
+
+      <section className="settings-section settings-reset-section" aria-labelledby="settings-reset-title">
+        <div>
+          <p>Defaults</p>
+          <h3 id="settings-reset-title">Reset Personalization</h3>
+          <span>Restore the default theme, accent, sound, and animations.</span>
+        </div>
+        <button type="button" onClick={resetPreferences}>
+          Reset preferences
+        </button>
       </section>
     </div>
   )

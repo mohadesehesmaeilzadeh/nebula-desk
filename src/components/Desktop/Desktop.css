@@ -5,9 +5,9 @@
   overflow: hidden;
   color: var(--color-text-primary);
   background:
-    radial-gradient(circle at 18% 18%, rgba(167, 139, 250, 0.22), transparent 34rem),
-    radial-gradient(circle at 82% 68%, rgba(110, 231, 249, 0.15), transparent 30rem),
-    radial-gradient(circle at 52% 18%, rgba(110, 231, 249, 0.08), transparent 22rem),
+    radial-gradient(circle at 18% 18%, var(--color-accent-secondary-soft), transparent 34rem),
+    radial-gradient(circle at 82% 68%, var(--color-accent-soft), transparent 30rem),
+    radial-gradient(circle at 52% 18%, var(--color-accent-soft), transparent 22rem),
     linear-gradient(145deg, var(--color-background-deep), var(--color-background));
 }
 
@@ -21,8 +21,8 @@
 
 .desktop::before {
   background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.38) 0 1px, transparent 1.4px),
-    radial-gradient(circle, rgba(110, 231, 249, 0.22) 0 1px, transparent 1.6px);
+    radial-gradient(circle, var(--color-star) 0 1px, transparent 1.4px),
+    radial-gradient(circle, var(--color-accent-border) 0 1px, transparent 1.6px);
   background-position:
     0 0,
     42px 58px;
@@ -34,8 +34,8 @@
 
 .desktop::after {
   background:
-    linear-gradient(rgba(255, 255, 255, 0.026) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.026) 1px, transparent 1px);
+    linear-gradient(var(--color-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: linear-gradient(to bottom, transparent, black 14%, black 72%, transparent);
 }
@@ -61,7 +61,7 @@
   justify-self: center;
   padding: 14px 22px;
   text-align: center;
-  background: rgba(18, 22, 42, 0.44);
+  background: var(--color-panel-translucent);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
   box-shadow: var(--shadow-soft);
@@ -114,12 +114,12 @@
 
 .desktop-icon:hover,
 .desktop-icon[data-selected="true"] {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-surface-subtle);
   border-color: var(--color-border);
 }
 
 .desktop-icon[data-selected="true"] {
-  box-shadow: inset 0 0 0 1px rgba(110, 231, 249, 0.22);
+  box-shadow: inset 0 0 0 1px var(--color-accent-border);
 }
 
 .desktop-icon:hover {
@@ -133,7 +133,7 @@
   place-items: center;
   color: var(--color-accent);
   background:
-    linear-gradient(145deg, rgba(110, 231, 249, 0.16), rgba(167, 139, 250, 0.16)),
+    linear-gradient(145deg, var(--color-accent-soft), var(--color-accent-secondary-soft)),
     var(--color-surface-subtle);
   border: 1px solid var(--color-border);
   border-radius: 18px;
@@ -164,14 +164,14 @@
   font-size: 0.88rem;
   font-weight: 650;
   line-height: 1.2;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.48);
+  text-shadow: var(--shadow-text);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
 @supports not (backdrop-filter: blur(18px)) {
   .desktop-brand {
-    background: rgba(18, 22, 42, 0.9);
+    background: var(--color-surface-strong);
   }
 }
 

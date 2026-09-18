@@ -1,7 +1,12 @@
 import SystemShell from './components/System/SystemShell'
+import { PreferencesProvider } from './context/PreferencesContext'
 
 function App() {
-  return <SystemShell />
+  return (
+    <PreferencesProvider>
+      <SystemShell />
+    </PreferencesProvider>
+  )
 }
 
 export default App

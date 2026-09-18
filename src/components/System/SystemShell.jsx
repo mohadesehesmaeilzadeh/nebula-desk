@@ -1,8 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  defaultPreferences,
-  PreferencesContext,
-} from '../../context/PreferencesContext'
+import { useCallback, useEffect, useState } from 'react'
+import { usePreferences } from '../../hooks/usePreferences'
 import Desktop from '../Desktop/Desktop'
 import BootScreen from './BootScreen'
 import LockScreen from './LockScreen'
@@ -35,23 +32,10 @@ function getInitialSystemStatus() {
 }
 
 function SystemShell() {
+  const { preferences } = usePreferences()
   const [status, setStatus] = useState(getInitialSystemStatus)
   const [desktopSessionId, setDesktopSessionId] = useState(0)
   const [hasDesktopSession, setHasDesktopSession] = useState(false)
-  const [preferences, setPreferences] = useState(defaultPreferences)
-
-  const preferencesContextValue = useMemo(
-    () => ({
-      preferences,
-      setTheme: (theme) => setPreferences((current) => ({ ...current, theme })),
-      setAccent: (accent) => setPreferences((current) => ({ ...current, accent })),
-      setAnimationsEnabled: (animationsEnabled) =>
-        setPreferences((current) => ({ ...current, animationsEnabled })),
-      setSoundEnabled: (soundEnabled) =>
-        setPreferences((current) => ({ ...current, soundEnabled })),
-    }),
-    [preferences],
-  )
 
   const handleBootComplete = useCallback(() => {
     markSessionBootComplete()
@@ -138,31 +122,29 @@ function SystemShell() {
   }
 
   return (
-    <PreferencesContext.Provider value={preferencesContextValue}>
-      <div
-        className="system-root"
-        data-theme={preferences.theme}
-        data-accent={preferences.accent}
-        data-animations={preferences.animationsEnabled ? 'on' : 'off'}
-        data-sound={preferences.soundEnabled ? 'on' : 'off'}
-      >
-        {hasDesktopSession && (
-          <div
-            className="system-desktop-stage"
-            hidden={status !== SYSTEM_STATUS.DESKTOP}
-            aria-hidden={status !== SYSTEM_STATUS.DESKTOP}
-          >
-            <Desktop
-              key={desktopSessionId}
-              onSleep={handleSleep}
-              onRestart={handleRestart}
-              onShutdown={handleShutdown}
-            />
-          </div>
-        )}
-        {renderSystemScreen()}
-      </div>
-    </PreferencesContext.Provider>
+    <div
+      className="system-root"
+      data-theme={preferences.theme}
+      data-accent={preferences.accent}
+      data-animations={preferences.animationsEnabled ? 'on' : 'off'}
+      data-sound={preferences.soundEnabled ? 'on' : 'off'}
+    >
+      {hasDesktopSession && (
+        <div
+          className="system-desktop-stage"
+          hidden={status !== SYSTEM_STATUS.DESKTOP}
+          aria-hidden={status !== SYSTEM_STATUS.DESKTOP}
+        >
+          <Desktop
+            key={desktopSessionId}
+            onSleep={handleSleep}
+            onRestart={handleRestart}
+            onShutdown={handleShutdown}
+          />
+        </div>
+      )}
+      {renderSystemScreen()}
+    </div>
   )
 }
 
