@@ -131,6 +131,7 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
         onRestore={windowManager.restoreWindow}
         onMove={windowManager.moveWindow}
         onInteract={handleWindowInteract}
+        onOpenApplication={launchApplication}
       />
       {isStartMenuOpen && (
         <StartMenu

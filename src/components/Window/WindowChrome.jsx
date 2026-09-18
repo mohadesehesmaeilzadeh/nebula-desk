@@ -2,6 +2,7 @@ import WindowControls from './WindowControls'
 
 function WindowChrome({
   app,
+  titleId,
   isActive,
   isMaximized,
   onMinimize,
@@ -24,7 +25,9 @@ function WindowChrome({
         onPointerCancel={onDragPointerUp}
       >
         <span className={`window-app-mark window-app-mark-${app.icon}`} aria-hidden="true" />
-        <span className="window-title">{app.name}</span>
+        <span id={titleId} className="window-title">
+          {app.name}
+        </span>
       </div>
       <WindowControls
         appName={app.name}

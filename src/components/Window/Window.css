@@ -13,7 +13,7 @@
   min-height: 220px;
   overflow: hidden;
   color: var(--color-text-primary);
-  background: rgba(14, 18, 34, 0.88);
+  background: var(--color-window-background);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
   box-shadow: var(--shadow-panel);
@@ -166,7 +166,7 @@
 .window-control[data-control="restore"] span::after {
   bottom: 0;
   left: 0;
-  background: rgba(14, 18, 34, 0.88);
+  background: var(--color-window-background);
 }
 
 .window-control-close span::before,
@@ -196,39 +196,31 @@
 }
 
 .window-content {
-  display: grid;
-  align-content: center;
-  justify-items: center;
   min-height: 0;
-  padding: clamp(24px, 5vw, 42px);
-  text-align: center;
+  overflow: hidden;
 }
 
-.window-content-eyebrow {
-  margin: 0 0 14px;
-  font-family: var(--font-family-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.12em;
-  color: var(--color-accent);
-  text-transform: uppercase;
+.app-viewport {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 14px;
+  overflow: auto;
 }
 
-.window-content h2 {
-  margin: 0;
-  font-size: clamp(2rem, 7vw, 4rem);
-  line-height: 1;
-}
-
-.window-content p:last-child {
-  max-width: 30rem;
-  margin: 18px 0 0;
+.application-unavailable {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  padding: 24px;
   color: var(--color-text-muted);
-  line-height: 1.65;
+  text-align: center;
 }
 
 @supports not (backdrop-filter: blur(20px)) {
   .window {
-    background: rgba(14, 18, 34, 0.96);
+    background: var(--color-window-background);
   }
 }
 

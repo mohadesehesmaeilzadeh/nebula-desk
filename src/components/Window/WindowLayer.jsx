@@ -1,4 +1,5 @@
 import { applications } from '../../data/applications'
+import ApplicationRenderer from '../../apps/ApplicationRenderer'
 import Window from './Window'
 import './Window.css'
 
@@ -15,6 +16,7 @@ function WindowLayer({
   onRestore,
   onMove,
   onInteract,
+  onOpenApplication,
 }) {
   const openWindows = Object.values(windows).filter((windowState) => windowState.isOpen)
   const visibleWindows = openWindows.filter((windowState) => !windowState.isMinimized)
@@ -53,7 +55,12 @@ function WindowLayer({
             onMaximize={onMaximize}
             onRestore={onRestore}
             onMove={onMove}
-          />
+          >
+            <ApplicationRenderer
+              appId={app.id}
+              onOpenApplication={onOpenApplication}
+            />
+          </Window>
         )
       })}
     </div>

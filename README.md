@@ -6,11 +6,11 @@ desktop environment instead of a traditional multi-section page.
 
 ## Current Status
 
-Phase 0 &mdash; Repository Preparation
+Phase 5 &mdash; MVP Applications
 
-The repository is currently being prepared for future NebulaDesk development.
-This phase removes the starter UI, establishes source organization, and adds
-global styling foundations.
+The repository now includes the core NebulaDesk system shell, desktop
+environment, window manager, taskbar, Start Menu, and the first functional MVP
+applications for portfolio content.
 
 ## Planned MVP
 

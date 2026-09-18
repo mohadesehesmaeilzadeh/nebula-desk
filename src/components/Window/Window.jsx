@@ -1,14 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import WindowChrome from './WindowChrome'
 
-function getPlaceholderMessage(app) {
-  if (app.id === 'terminal') {
-    return 'Terminal command interface will be implemented in Phase 5.'
-  }
-
-  return `${app.name} application content will be implemented in Phase 5.`
-}
-
 function Window({
   app,
   windowState,
@@ -20,6 +12,7 @@ function Window({
   onMaximize,
   onRestore,
   onMove,
+  children,
 }) {
   const windowRef = useRef(null)
   const dragRef = useRef(null)
@@ -124,6 +117,7 @@ function Window({
     >
       <WindowChrome
         app={app}
+        titleId={titleId}
         isActive={isActive}
         isMaximized={windowState.isMaximized}
         onMinimize={() => onMinimize(app.id)}
@@ -136,9 +130,7 @@ function Window({
         onTitleDoubleClick={handleTitleDoubleClick}
       />
       <section className="window-content" aria-labelledby={titleId}>
-        <p className="window-content-eyebrow">NebulaDesk Application</p>
-        <h2 id={titleId}>{app.name}</h2>
-        <p>{getPlaceholderMessage(app)}</p>
+        {children}
       </section>
     </article>
   )
