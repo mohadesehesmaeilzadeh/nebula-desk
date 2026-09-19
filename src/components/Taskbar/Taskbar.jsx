@@ -28,13 +28,14 @@ function Taskbar({
         className="taskbar-nebula-button"
         type="button"
         aria-label={isStartMenuOpen ? 'Close NebulaDesk Start Menu' : 'Open NebulaDesk Start Menu'}
+        aria-keyshortcuts="Control+Space Meta+Space"
         aria-expanded={isStartMenuOpen}
         aria-controls={startMenuId}
         onClick={onToggleStartMenu}
       >
         <span className="taskbar-nebula-mark" aria-hidden="true" />
       </button>
-      <div className="taskbar-running-apps" aria-label="Running applications">
+      <div className="taskbar-running-apps" role="group" aria-label="Running applications">
         {visibleRunningApps.map(({ app, windowState }) => {
           const state = windowState.isMinimized
             ? 'minimized'

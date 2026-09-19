@@ -214,6 +214,10 @@
   border-color: var(--color-accent-border);
 }
 
+.music-track-item[data-current="true"] {
+  box-shadow: inset 4px 0 0 var(--color-accent);
+}
+
 .music-track-number,
 .music-track-item time {
   color: var(--color-text-muted);

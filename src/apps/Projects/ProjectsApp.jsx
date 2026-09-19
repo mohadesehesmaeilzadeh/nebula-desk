@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { projects } from '../../data/projects'
 import ProjectDetails from './ProjectDetails'
 import './ProjectsApp.css'
@@ -6,14 +6,42 @@ import './ProjectsApp.css'
 function ProjectsApp() {
   const [selectedProjectId, setSelectedProjectId] = useState(projects[0]?.id || '')
   const [mobileDetailVisible, setMobileDetailVisible] = useState(false)
+  const backButtonRef = useRef(null)
+  const projectButtonRefs = useRef(new Map())
+  const focusFrameRef = useRef(null)
   const selectedProject = useMemo(
     () => projects.find((project) => project.id === selectedProjectId) || projects[0],
     [selectedProjectId],
   )
 
+  useEffect(() => {
+    return () => {
+      if (focusFrameRef.current !== null) {
+        window.cancelAnimationFrame(focusFrameRef.current)
+      }
+    }
+  }, [])
+
+  function scheduleFocus(getTarget) {
+    if (focusFrameRef.current !== null) {
+      window.cancelAnimationFrame(focusFrameRef.current)
+    }
+
+    focusFrameRef.current = window.requestAnimationFrame(() => {
+      focusFrameRef.current = null
+      getTarget()?.focus({ preventScroll: true })
+    })
+  }
+
   function handleSelectProject(projectId) {
     setSelectedProjectId(projectId)
     setMobileDetailVisible(true)
+    scheduleFocus(() => backButtonRef.current)
+  }
+
+  function handleBackToProjects() {
+    setMobileDetailVisible(false)
+    scheduleFocus(() => projectButtonRefs.current.get(selectedProjectId))
   }
 
   if (projects.length === 0) {
@@ -34,6 +62,13 @@ function ProjectsApp() {
         <div className="project-list" role="list">
           {projects.map((project) => (
             <button
+              ref={(element) => {
+                if (element) {
+                  projectButtonRefs.current.set(project.id, element)
+                } else {
+                  projectButtonRefs.current.delete(project.id)
+                }
+              }}
               key={project.id}
               type="button"
               className="project-list-item"
@@ -49,7 +84,7 @@ function ProjectsApp() {
       </section>
 
       <div className="project-mobile-toolbar">
-        <button type="button" onClick={() => setMobileDetailVisible(false)}>
+        <button ref={backButtonRef} type="button" onClick={handleBackToProjects}>
           Back to Projects
         </button>
       </div>

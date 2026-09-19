@@ -139,7 +139,7 @@ function MemoryGameApp() {
         </div>
       </section>
 
-      <div className="memory-board" aria-label="Memory cards">
+      <div className="memory-board" role="group" aria-label="Memory cards">
         {cards.map((card, index) => {
           const isFlipped = flippedCardIds.includes(card.id)
           const isMatched = matchedCardIds.includes(card.id)
@@ -154,7 +154,13 @@ function MemoryGameApp() {
               data-revealed={isRevealed ? 'true' : 'false'}
               data-matched={isMatched ? 'true' : 'false'}
               disabled={isMatched || isFlipped || flippedCardIds.length >= 2 || gameStatus === 'won'}
-              aria-label={isRevealed ? `${card.label}, card ${index + 1}` : `Hidden card ${index + 1}`}
+              aria-label={
+                isMatched
+                  ? `Matched ${card.label} card`
+                  : isFlipped
+                    ? `${card.label}, card ${index + 1}`
+                    : `Hidden card ${index + 1}`
+              }
               onClick={() => handleCardClick(card)}
             >
               <span className="memory-card-inner" aria-hidden="true">

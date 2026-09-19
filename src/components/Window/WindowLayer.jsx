@@ -40,6 +40,7 @@ function WindowLayer({
     <div
       className="window-layer"
       data-mobile={isMobile ? 'true' : 'false'}
+      role="region"
       aria-label="Open application windows"
       onPointerDownCapture={onInteract}
     >

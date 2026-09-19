@@ -31,31 +31,17 @@ function StartMenu({
 }) {
   const [searchQuery, setSearchQuery] = useState('')
   const searchInputRef = useRef(null)
+  const closeButtonRef = useRef(null)
   const filteredApplications = useMemo(
     () => applications.filter((app) => appMatchesQuery(app, searchQuery)),
     [applications, searchQuery],
   )
 
   useEffect(() => {
-    if (!isMobile) {
-      searchInputRef.current?.focus({ preventScroll: true })
-    }
+    const initialFocusTarget = isMobile ? closeButtonRef.current : searchInputRef.current
+
+    initialFocusTarget?.focus({ preventScroll: true })
   }, [isMobile])
-
-  useEffect(() => {
-    function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        onClose()
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [onClose])
 
   function handlePowerAction(action) {
     onClose()
@@ -75,6 +61,7 @@ function StartMenu({
         id={id}
         className="start-menu"
         aria-label="NebulaDesk Start Menu"
+        data-start-menu-root="true"
         data-mobile={isMobile ? 'true' : 'false'}
         onClick={(event) => event.stopPropagation()}
       >
@@ -88,6 +75,7 @@ function StartMenu({
           </div>
           {isMobile && (
             <button
+              ref={closeButtonRef}
               className="start-menu-close"
               type="button"
               aria-label="Close Start Menu"

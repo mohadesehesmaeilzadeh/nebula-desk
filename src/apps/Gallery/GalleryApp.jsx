@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { galleryItems } from '../../data/gallery'
 import GalleryViewer from './GalleryViewer'
 import './GalleryApp.css'
@@ -20,14 +20,34 @@ function GalleryApp() {
   const availableItems = useMemo(() => galleryItems.filter(isValidGalleryItem), [])
   const [selectedItemId, setSelectedItemId] = useState(null)
   const [failedImageIds, setFailedImageIds] = useState(() => new Set())
+  const cardRefs = useRef(new Map())
+  const focusFrameRef = useRef(null)
   const selectedIndex = availableItems.findIndex((item) => item.id === selectedItemId)
   const selectedItem = selectedIndex >= 0 ? availableItems[selectedIndex] : null
+
+  useEffect(() => {
+    return () => {
+      if (focusFrameRef.current !== null) {
+        window.cancelAnimationFrame(focusFrameRef.current)
+      }
+    }
+  }, [])
 
   function markImageFailed(itemId) {
     setFailedImageIds((currentIds) => {
       const nextIds = new Set(currentIds)
       nextIds.add(itemId)
       return nextIds
+    })
+  }
+
+  function closeViewer() {
+    const itemId = selectedItemId
+
+    setSelectedItemId(null)
+    focusFrameRef.current = window.requestAnimationFrame(() => {
+      focusFrameRef.current = null
+      cardRefs.current.get(itemId)?.focus({ preventScroll: true })
     })
   }
 
@@ -40,7 +60,7 @@ function GalleryApp() {
           hasNext={selectedIndex < availableItems.length - 1}
           onPrevious={() => setSelectedItemId(availableItems[selectedIndex - 1]?.id)}
           onNext={() => setSelectedItemId(availableItems[selectedIndex + 1]?.id)}
-          onClose={() => setSelectedItemId(null)}
+          onClose={closeViewer}
         />
       </div>
     )
@@ -55,9 +75,16 @@ function GalleryApp() {
       </header>
 
       {availableItems.length > 0 ? (
-        <div className="gallery-grid" aria-label="Gallery images">
+        <div className="gallery-grid" role="group" aria-label="Gallery images">
           {availableItems.map((item) => (
             <button
+              ref={(element) => {
+                if (element) {
+                  cardRefs.current.set(item.id, element)
+                } else {
+                  cardRefs.current.delete(item.id)
+                }
+              }}
               key={item.id}
               className="gallery-card"
               type="button"

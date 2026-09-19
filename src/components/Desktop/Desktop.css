@@ -122,6 +122,12 @@
   box-shadow: inset 0 0 0 1px var(--color-accent-border);
 }
 
+.desktop-icon[data-selected="true"] .desktop-icon-label {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
 .desktop-icon:hover {
   transform: translateY(-1px);
 }

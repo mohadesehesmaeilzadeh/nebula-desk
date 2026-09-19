@@ -31,7 +31,7 @@ function LockScreen({ onUnlock }) {
           {timeFormatter.format(now)}
         </h1>
         <p className="system-copy">Welcome back to NebulaDesk.</p>
-        <button className="system-button" type="button" onClick={onUnlock}>
+        <button className="system-button" type="button" autoFocus onClick={onUnlock}>
           Enter Desktop
         </button>
         <p className="system-hint">Press Enter or click to continue</p>

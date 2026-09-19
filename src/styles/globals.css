@@ -53,6 +53,13 @@ button {
   box-shadow: var(--shadow-focus);
 }
 
+.app-viewport :focus-visible,
+.start-menu :focus-visible,
+.taskbar :focus-visible,
+.window-control:focus-visible {
+  outline-offset: -3px;
+}
+
 #root {
   isolation: isolate;
 }

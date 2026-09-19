@@ -1,7 +1,6 @@
 export function AppIconGlyph({ icon }) {
   const iconClassName = `desktop-icon-glyph desktop-icon-glyph-${icon}`
 
-  
   return (
     <span className={iconClassName} aria-hidden="true">
       <svg viewBox="0 0 48 48" focusable="false">
@@ -86,7 +85,15 @@ export function AppIconGlyph({ icon }) {
   )
 }
 
-function DesktopIcon({ app, selected, openOnSingleClick, onSelect, onOpen }) {
+function DesktopIcon({
+  app,
+  buttonRef,
+  keyboardShortcut,
+  selected,
+  openOnSingleClick,
+  onSelect,
+  onOpen,
+}) {
   function handleClick(event) {
     event.stopPropagation()
     onSelect(app.id)
@@ -107,7 +114,13 @@ function DesktopIcon({ app, selected, openOnSingleClick, onSelect, onOpen }) {
   }
 
   function handleKeyDown(event) {
-    if (event.key !== 'Enter') {
+    if (
+      (event.key !== 'Enter' && event.key !== ' ') ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey
+    ) {
       return
     }
 
@@ -118,9 +131,11 @@ function DesktopIcon({ app, selected, openOnSingleClick, onSelect, onOpen }) {
 
   return (
     <button
+      ref={buttonRef}
       className="desktop-icon"
       type="button"
       aria-label={`${app.name} application`}
+      aria-keyshortcuts={keyboardShortcut}
       aria-pressed={selected}
       data-selected={selected ? 'true' : 'false'}
       onClick={handleClick}

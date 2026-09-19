@@ -31,7 +31,7 @@ function SkillsApp() {
         <h2>Developer Stack</h2>
       </header>
 
-      <div className="skills-summary" aria-label="Skill summary">
+      <section className="skills-summary" aria-label="Skill summary">
         <div>
           <span>{skills.length}</span>
           <p>Configured skills</p>
@@ -40,7 +40,7 @@ function SkillsApp() {
           <span>{categories.length}</span>
           <p>Capability groups</p>
         </div>
-      </div>
+      </section>
 
       <div className="skills-category-list">
         {categories.map(([category, categorySkills]) => (

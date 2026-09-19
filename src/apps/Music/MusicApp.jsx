@@ -159,6 +159,16 @@ function MusicApp() {
     }
   }
 
+  function toggleMute() {
+    if (volume === 0) {
+      setVolume(DEFAULT_VOLUME)
+      setIsMuted(false)
+      return
+    }
+
+    setIsMuted((muted) => !muted)
+  }
+
   if (!currentTrack) {
     return (
       <div className="music-app music-empty app-viewport">
@@ -167,6 +177,8 @@ function MusicApp() {
       </div>
     )
   }
+
+  const isAudioMuted = isMuted || volume === 0
 
   return (
     <div className="music-app app-viewport">
@@ -199,8 +211,10 @@ function MusicApp() {
           <span>{currentTrack.artist}</span>
         </div>
 
-        <div className="music-transport" aria-label="Playback controls">
-          <button type="button" onClick={handlePrevious}>Previous</button>
+        <div className="music-transport" role="group" aria-label="Playback controls">
+          <button type="button" aria-label="Previous track" onClick={handlePrevious}>
+            Previous
+          </button>
           <button
             className="music-play-button"
             type="button"
@@ -209,7 +223,9 @@ function MusicApp() {
           >
             {isPlaying ? 'Pause' : 'Play'}
           </button>
-          <button type="button" onClick={() => changeTrack(1)}>Next</button>
+          <button type="button" aria-label="Next track" onClick={() => changeTrack(1)}>
+            Next
+          </button>
         </div>
 
         <div className="music-progress-group">
@@ -232,8 +248,13 @@ function MusicApp() {
         </div>
 
         <div className="music-volume-group">
-          <button type="button" onClick={() => setIsMuted((muted) => !muted)}>
-            {isMuted || volume === 0 ? 'Unmute' : 'Mute'}
+          <button
+            type="button"
+            aria-label={isAudioMuted ? 'Unmute audio' : 'Mute audio'}
+            aria-pressed={isAudioMuted}
+            onClick={toggleMute}
+          >
+            {isAudioMuted ? 'Unmute' : 'Mute'}
           </button>
           <label htmlFor="music-volume">Volume</label>
           <input

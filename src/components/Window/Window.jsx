@@ -20,7 +20,7 @@ function Window({
   const titleId = `window-title-${app.id}`
 
   useEffect(() => {
-    if (isActive) {
+    if (isActive && !windowRef.current?.contains(document.activeElement)) {
       windowRef.current?.focus({ preventScroll: true })
     }
   }, [isActive])

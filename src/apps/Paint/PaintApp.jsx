@@ -156,7 +156,6 @@ function PaintApp() {
     }
 
     const canvas = canvasRef.current
-    const wrapper = canvasWrapRef.current
     const context = canvas.getContext('2d')
 
     context.save()
@@ -165,7 +164,6 @@ function PaintApp() {
     context.fillRect(0, 0, canvas.width, canvas.height)
     context.restore()
     setStatus('Canvas cleared')
-    wrapper?.focus()
   }
 
   function downloadDrawing() {
@@ -208,7 +206,7 @@ function PaintApp() {
             disabled={tool === 'eraser'}
             onChange={(event) => setColor(event.target.value)}
           />
-          <div className="paint-swatches" aria-label="Quick colors">
+          <div className="paint-swatches" role="group" aria-label="Quick colors">
             {PAINT_SWATCHES.map((swatch) => (
               <button
                 key={swatch.value}
@@ -251,11 +249,15 @@ function PaintApp() {
       <div
         ref={canvasWrapRef}
         className="paint-canvas-wrap"
-        tabIndex="-1"
       >
+        <p id="paint-canvas-description" className="visually-hidden">
+          Drawing supports pointer, touch, and pen input. Keyboard drawing is not available.
+        </p>
         <canvas
           ref={canvasRef}
+          role="img"
           aria-label="Drawing canvas"
+          aria-describedby="paint-canvas-description"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={finishDrawing}

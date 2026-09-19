@@ -12,7 +12,7 @@ function WindowControls({
   }
 
   return (
-    <div className="window-controls" aria-label={`${appName} window controls`}>
+    <div className="window-controls" role="group" aria-label={`${appName} window controls`}>
       {!isMobile && (
         <>
           <button

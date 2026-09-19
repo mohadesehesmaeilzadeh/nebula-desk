@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { applications } from '../../data/applications'
+import useKeyboardShortcuts from '../../hooks/useKeyboardShortcuts'
 import { MOBILE_MEDIA_QUERY, useMediaQuery } from '../../hooks/useMediaQuery'
 import StartMenu from '../StartMenu/StartMenu'
 import Taskbar from '../Taskbar/Taskbar'
@@ -9,15 +10,25 @@ import './Desktop.css'
 import DesktopIcon from './DesktopIcon'
 
 const applicationById = new Map(applications.map((app) => [app.id, app]))
+const applicationKeyboardShortcuts = Object.freeze({
+  about: 'Alt+1',
+  projects: 'Alt+2',
+  terminal: 'Alt+3',
+  settings: 'Alt+4',
+})
 
 function Desktop({ onSleep, onRestart, onShutdown }) {
   const desktopRef = useRef(null)
   const startButtonRef = useRef(null)
+  const desktopIconRefs = useRef(new Map())
+  const launchFocusTargetsRef = useRef(new Map())
+  const focusFrameRef = useRef(null)
   const [selectedAppId, setSelectedAppId] = useState(null)
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false)
   const [recentAppIds, setRecentAppIds] = useState([])
   const isMobileWindowMode = useMediaQuery(MOBILE_MEDIA_QUERY)
   const windowManager = useWindowManager(desktopRef)
+  const openWindow = windowManager.openWindow
   const desktopApplications = applications.filter((app) => app.showOnDesktop)
   const startMenuApplications = applications.filter((app) => app.showInStartMenu)
   const runningApps = Object.values(windowManager.windows)
@@ -32,30 +43,74 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
     .map((appId) => applicationById.get(appId))
     .filter(Boolean)
 
+  const scheduleFocus = useCallback((getTarget) => {
+    if (focusFrameRef.current !== null) {
+      window.cancelAnimationFrame(focusFrameRef.current)
+    }
+
+    focusFrameRef.current = window.requestAnimationFrame(() => {
+      focusFrameRef.current = null
+      const target = getTarget()
+
+      if (target instanceof HTMLElement && target.isConnected) {
+        target.focus({ preventScroll: true })
+      }
+    })
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (focusFrameRef.current !== null) {
+        window.cancelAnimationFrame(focusFrameRef.current)
+      }
+    }
+  }, [])
+
   const closeStartMenu = useCallback(() => {
     setIsStartMenuOpen(false)
   }, [])
 
-  function updateRecentApps(appId) {
+  const dismissStartMenu = useCallback(() => {
+    setIsStartMenuOpen(false)
+    scheduleFocus(() => startButtonRef.current)
+  }, [scheduleFocus])
+
+  const updateRecentApps = useCallback((appId) => {
     setRecentAppIds((currentAppIds) =>
       [appId, ...currentAppIds.filter((currentAppId) => currentAppId !== appId)].slice(0, 4),
     )
-  }
+  }, [])
 
-  function launchApplication(appId) {
-    windowManager.openWindow(appId)
+  const launchApplication = useCallback((appId) => {
+    if (document.activeElement instanceof HTMLElement) {
+      launchFocusTargetsRef.current.set(appId, document.activeElement)
+    }
+
+    openWindow(appId)
     updateRecentApps(appId)
     closeStartMenu()
-  }
+  }, [closeStartMenu, openWindow, updateRecentApps])
 
   function handleDesktopClick() {
     setSelectedAppId(null)
     closeStartMenu()
   }
 
-  function handleToggleStartMenu() {
-    setIsStartMenuOpen((isOpen) => !isOpen)
-  }
+  const handleToggleStartMenu = useCallback(() => {
+    if (isStartMenuOpen) {
+      dismissStartMenu()
+      return
+    }
+
+    setIsStartMenuOpen(true)
+  }, [dismissStartMenu, isStartMenuOpen])
+
+  useKeyboardShortcuts({
+    isStartMenuOpen,
+    onCloseStartMenu: dismissStartMenu,
+    onOpenApplication: launchApplication,
+    onToggleStartMenu: handleToggleStartMenu,
+  })
 
   function handleTaskbarAppClick(appId) {
     const windowState = windowManager.windows[appId]
@@ -96,10 +151,22 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
 
   function handleCloseWindow(appId) {
     windowManager.closeWindow(appId, isMobileWindowMode)
+    scheduleFocus(() => {
+      const launchTarget = launchFocusTargetsRef.current.get(appId)
+
+      launchFocusTargetsRef.current.delete(appId)
+
+      if (launchTarget instanceof HTMLElement && launchTarget.isConnected) {
+        return launchTarget
+      }
+
+      return desktopIconRefs.current.get(appId) || startButtonRef.current
+    })
   }
 
   function handleMinimizeWindow(appId) {
     windowManager.minimizeWindow(appId, isMobileWindowMode)
+    scheduleFocus(() => desktopIconRefs.current.get(appId) || startButtonRef.current)
   }
 
   return (
@@ -117,18 +184,26 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
           <h1 id="desktop-title">Desktop shell ready</h1>
         </header>
 
-        <div className="desktop-icon-grid" aria-label="Desktop applications">
+        <nav className="desktop-icon-grid" aria-label="Desktop applications">
           {desktopApplications.map((app) => (
             <DesktopIcon
               key={app.id}
               app={app}
+              buttonRef={(element) => {
+                if (element) {
+                  desktopIconRefs.current.set(app.id, element)
+                } else {
+                  desktopIconRefs.current.delete(app.id)
+                }
+              }}
+              keyboardShortcut={applicationKeyboardShortcuts[app.id]}
               selected={selectedAppId === app.id}
               openOnSingleClick={isMobileWindowMode}
               onSelect={handleSelectApplication}
               onOpen={handleOpenApplication}
             />
           ))}
-        </div>
+        </nav>
       </section>
       <WindowLayer
         windows={windowManager.windows}
@@ -153,7 +228,7 @@ function Desktop({ onSleep, onRestart, onShutdown }) {
           onSleep={onSleep}
           onRestart={onRestart}
           onShutdown={onShutdown}
-          onClose={closeStartMenu}
+          onClose={dismissStartMenu}
         />
       )}
       <Taskbar

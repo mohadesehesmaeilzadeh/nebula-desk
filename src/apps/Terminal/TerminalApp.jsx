@@ -91,7 +91,13 @@ function TerminalApp({ onOpenApplication }) {
 
   return (
     <div className="terminal-app app-viewport" onClick={() => inputRef.current?.focus()}>
-      <div className="terminal-output" aria-label="Terminal output">
+      <div
+        className="terminal-output"
+        role="log"
+        aria-label="Terminal output"
+        aria-live="polite"
+        aria-relevant="additions text"
+      >
         {entries.map((entry) => (
           <div key={entry.id} className="terminal-entry">
             {entry.command && (

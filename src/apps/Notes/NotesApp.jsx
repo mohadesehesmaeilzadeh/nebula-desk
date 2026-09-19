@@ -31,10 +31,26 @@ function NotesApp() {
   const [mobileEditorVisible, setMobileEditorVisible] = useState(false)
   const [saveStatus, setSaveStatus] = useState('Saved locally')
   const lastPersistedNotes = useRef(notes)
+  const newNoteButtonRef = useRef(null)
+  const noteButtonRefs = useRef(new Map())
+  const titleInputRef = useRef(null)
+  const shouldFocusEditorRef = useRef(false)
+  const focusFrameRef = useRef(null)
   const selectedNote = useMemo(
     () => notes.find((note) => note.id === selectedNoteId) || null,
     [notes, selectedNoteId],
   )
+
+  function scheduleFocus(getTarget) {
+    if (focusFrameRef.current !== null) {
+      window.cancelAnimationFrame(focusFrameRef.current)
+    }
+
+    focusFrameRef.current = window.requestAnimationFrame(() => {
+      focusFrameRef.current = null
+      getTarget()?.focus({ preventScroll: true })
+    })
+  }
 
   useEffect(() => {
     if (selectedNoteId && notes.some((note) => note.id === selectedNoteId)) {
@@ -53,6 +69,35 @@ function NotesApp() {
     lastPersistedNotes.current = notes
   }, [notes])
 
+  useEffect(() => {
+    if (!shouldFocusEditorRef.current || !selectedNoteId || !mobileEditorVisible) {
+      return undefined
+    }
+
+    shouldFocusEditorRef.current = false
+    const frameId = window.requestAnimationFrame(() => {
+      focusFrameRef.current = null
+      titleInputRef.current?.focus({ preventScroll: true })
+    })
+    focusFrameRef.current = frameId
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+
+      if (focusFrameRef.current === frameId) {
+        focusFrameRef.current = null
+      }
+    }
+  }, [mobileEditorVisible, selectedNoteId])
+
+  useEffect(() => {
+    return () => {
+      if (focusFrameRef.current !== null) {
+        window.cancelAnimationFrame(focusFrameRef.current)
+      }
+    }
+  }, [])
+
   function handleCreateNote() {
     const timestamp = new Date().toISOString()
     const note = {
@@ -63,14 +108,23 @@ function NotesApp() {
       updatedAt: timestamp,
     }
 
+    shouldFocusEditorRef.current = true
     setNotes((currentNotes) => sortNotes([note, ...currentNotes]))
     setSelectedNoteId(note.id)
     setMobileEditorVisible(true)
   }
 
   function handleSelectNote(noteId) {
+    shouldFocusEditorRef.current = true
     setSelectedNoteId(noteId)
     setMobileEditorVisible(true)
+  }
+
+  function handleBackToNotes() {
+    setMobileEditorVisible(false)
+    scheduleFocus(
+      () => noteButtonRefs.current.get(selectedNoteId) || newNoteButtonRef.current,
+    )
   }
 
   function updateSelectedNote(changes) {
@@ -99,6 +153,9 @@ function NotesApp() {
     setNotes(remainingNotes)
     setSelectedNoteId(remainingNotes[0]?.id || null)
     setMobileEditorVisible(false)
+    scheduleFocus(
+      () => noteButtonRefs.current.get(remainingNotes[0]?.id) || newNoteButtonRef.current,
+    )
   }
 
   return (
@@ -112,7 +169,12 @@ function NotesApp() {
             <p>Local workspace</p>
             <h2 id="notes-list-title">Notes</h2>
           </div>
-          <button className="notes-new-button" type="button" onClick={handleCreateNote}>
+          <button
+            ref={newNoteButtonRef}
+            className="notes-new-button"
+            type="button"
+            onClick={handleCreateNote}
+          >
             <span aria-hidden="true">+</span>
             New Note
           </button>
@@ -122,6 +184,13 @@ function NotesApp() {
           <div className="notes-list" aria-label="Saved notes">
             {notes.map((note) => (
               <button
+                ref={(element) => {
+                  if (element) {
+                    noteButtonRefs.current.set(note.id, element)
+                  } else {
+                    noteButtonRefs.current.delete(note.id)
+                  }
+                }}
                 key={note.id}
                 className="notes-list-item"
                 type="button"
@@ -151,7 +220,7 @@ function NotesApp() {
             <button
               className="notes-mobile-back"
               type="button"
-              onClick={() => setMobileEditorVisible(false)}
+              onClick={handleBackToNotes}
             >
               Back to Notes
             </button>
@@ -166,13 +235,14 @@ function NotesApp() {
           <div className="notes-editor-fields">
             <label htmlFor="notes-title-input">Title</label>
             <input
+              ref={titleInputRef}
               id="notes-title-input"
               type="text"
               value={selectedNote.title}
               onChange={(event) => updateSelectedNote({ title: event.target.value })}
             />
 
-            <label htmlFor="notes-content-input">Note</label>
+            <label htmlFor="notes-content-input">Content</label>
             <textarea
               id="notes-content-input"
               value={selectedNote.content}

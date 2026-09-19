@@ -22,8 +22,10 @@
   animation: scale-in var(--transition-normal) both;
 }
 
-.window:focus {
-  outline: none;
+.window:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 1px var(--color-accent-border), var(--shadow-panel);
 }
 
 .window[data-active="true"] {

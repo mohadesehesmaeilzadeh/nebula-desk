@@ -38,6 +38,9 @@
   color: var(--color-text-on-accent);
   background: var(--color-accent);
   border-color: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
 }
 
 .paint-color-control,

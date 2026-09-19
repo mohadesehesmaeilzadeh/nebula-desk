@@ -128,8 +128,10 @@
   border-radius: var(--radius-small);
 }
 
-.gallery-viewer:focus {
-  outline: none;
+.gallery-viewer:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 1px var(--color-accent-border);
 }
 
 .gallery-viewer-header,

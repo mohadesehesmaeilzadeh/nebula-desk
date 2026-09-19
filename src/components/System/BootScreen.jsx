@@ -93,7 +93,12 @@ function BootScreen({ onComplete }) {
           </div>
         </div>
 
-        <button className="system-button system-button-secondary" type="button" onClick={handleSkipBoot}>
+        <button
+          className="system-button system-button-secondary"
+          type="button"
+          autoFocus
+          onClick={handleSkipBoot}
+        >
           Skip Boot
         </button>
       </section>
