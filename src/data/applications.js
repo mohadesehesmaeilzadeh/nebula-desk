@@ -107,4 +107,28 @@ export const applications = [
       height: 620,
     },
   },
+  {
+    id: 'memory',
+    name: 'Memory Game',
+    icon: 'memory',
+    showOnDesktop: true,
+    showInStartMenu: true,
+    keywords: ['memory', 'game', 'cards', 'match'],
+    window: {
+      width: 720,
+      height: 640,
+    },
+  },
+  {
+    id: 'trash',
+    name: 'Trash',
+    icon: 'trash',
+    showOnDesktop: true,
+    showInStartMenu: true,
+    keywords: ['trash', 'deleted', 'bin', 'files'],
+    window: {
+      width: 760,
+      height: 520,
+    },
+  },
 ]

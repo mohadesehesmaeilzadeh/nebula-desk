@@ -6,7 +6,7 @@ desktop environment instead of a traditional multi-section page.
 
 ## Current Status
 
-Phase 8B &mdash; Music Player &amp; Paint
+Phase 8C &mdash; Memory Game &amp; Trash
 
 The repository now includes the core NebulaDesk system shell, desktop
 environment, window manager, taskbar, Start Menu, functional MVP applications,
@@ -18,6 +18,8 @@ Notes adds versioned LocalStorage persistence for plain-text writing. Gallery
 uses local NebulaDesk imagery with a responsive grid and an in-app viewer.
 Music Player uses original local WAV samples with native browser playback,
 while Paint provides a responsive pointer-enabled HTML Canvas workspace.
+Memory Game adds a local card-matching challenge with a persisted best result.
+Trash is a fictional runtime-only view of demo deleted items.
 
 NebulaDesk stores theme, accent, sound, and animation preferences locally in
 the browser using LocalStorage. No preference data is sent to a server.
@@ -39,6 +41,8 @@ the browser using LocalStorage. No preference data is sent to a server.
 - Gallery
 - Music Player
 - Paint
+- Memory Game
+- Trash
 - Responsive mobile behavior
 
 ## Technology

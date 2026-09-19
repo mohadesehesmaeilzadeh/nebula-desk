@@ -66,6 +66,21 @@ export function AppIconGlyph({ icon }) {
             <circle cx="17" cy="28" r="2" />
           </>
         )}
+        {icon === 'memory' && (
+          <>
+            <rect x="7" y="8" width="15" height="15" rx="3" />
+            <rect x="26" y="8" width="15" height="15" rx="3" />
+            <rect x="7" y="27" width="15" height="15" rx="3" />
+            <rect x="26" y="27" width="15" height="15" rx="3" />
+            <path d="M12 15h5M31 15h5M12 34h5M31 34h5" />
+          </>
+        )}
+        {icon === 'trash' && (
+          <>
+            <path d="M12 15h24l-2 27H14z" />
+            <path d="M9 15h30M19 15V9h10v6M20 22v13M28 22v13" />
+          </>
+        )}
       </svg>
     </span>
   )
