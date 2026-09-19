@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { usePreferences } from '../../hooks/usePreferences'
 import Desktop from '../Desktop/Desktop'
 import BootScreen from './BootScreen'
 import LockScreen from './LockScreen'
@@ -31,6 +32,7 @@ function getInitialSystemStatus() {
 }
 
 function SystemShell() {
+  const { preferences } = usePreferences()
   const [status, setStatus] = useState(getInitialSystemStatus)
   const [desktopSessionId, setDesktopSessionId] = useState(0)
   const [hasDesktopSession, setHasDesktopSession] = useState(false)
@@ -120,7 +122,13 @@ function SystemShell() {
   }
 
   return (
-    <div className="system-root">
+    <div
+      className="system-root"
+      data-theme={preferences.theme}
+      data-accent={preferences.accent}
+      data-animations={preferences.animationsEnabled ? 'on' : 'off'}
+      data-sound={preferences.soundEnabled ? 'on' : 'off'}
+    >
       {hasDesktopSession && (
         <div
           className="system-desktop-stage"

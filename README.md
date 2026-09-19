@@ -1,74 +1,125 @@
 # NebulaDesk
 
-NebulaDesk is a frontend-only interactive web operating system and personal
-React portfolio. The project will present portfolio content through a fictional
-desktop environment instead of a traditional multi-section page.
+**NebulaDesk &mdash; Completed Portfolio Project**
 
-## Current Status
+## About
 
-Phase 0 &mdash; Repository Preparation
+NebulaDesk is a frontend-only interactive portfolio presented as a fictional
+desktop operating system. It combines a reusable window manager, local
+applications, responsive mobile behavior, browser persistence, and accessible
+keyboard interaction in one React application.
 
-The repository is currently being prepared for future NebulaDesk development.
-This phase removes the starter UI, establishes source organization, and adds
-global styling foundations.
+![NebulaDesk startup sequence](src/assets/gallery/startup-sequence.png)
 
-## Planned MVP
+## Features
 
-- Boot Screen
-- Lock Screen
-- Desktop
-- Taskbar
-- Start Menu
-- Reusable windows
-- About
+- Boot, lock, sleep, restart, shutdown, and power-on system states
+- Desktop launchers, draggable windows, taskbar, Start Menu, and app switching
+- Floating desktop windows and focused fullscreen mobile applications
+- Dark and light themes with cyan, purple, and blue accents
+- Local persistence for preferences, notes, Music volume, and Memory best score
+- Global keyboard shortcuts, visible focus states, and reduced-motion support
+- Frontend-only operation with no backend, account, or external API dependency
+
+## Applications
+
+- About Me
 - Projects
+- Skills
 - Terminal
 - Settings
-- Responsive mobile behavior
+- Notes
+- Gallery
+- Music Player
+- Paint
+- Memory Game
+- Trash
 
-## Technology
+## Tech Stack
 
-- React
+- React 19
 - JavaScript
-- HTML
 - CSS
 - Vite
+- Native browser APIs including Canvas, Audio, Pointer Events, and LocalStorage
 
-## Frontend-Only Constraints
+## Architecture
 
-NebulaDesk does not require:
+Application metadata is defined in a shared registry. The desktop, Start Menu,
+Taskbar, Terminal `open` command, Window Manager, and application renderer all
+use that registry rather than app-specific shell logic. Applications own their
+internal state while shared system state stays in the desktop and preferences
+layers.
 
-- Backend
-- Database
-- Authentication
-- External API
-
-Local static data and browser storage may be used for portfolio content,
-preferences, and lightweight persistence.
-
-## Local Development
+## Getting Started
 
 ```bash
 npm install
 npm run dev
-npm run lint
-npm run build
 ```
 
-## Roadmap
+Vite prints the local development URL after startup.
 
-- Phase 0 &mdash; Repository Preparation
-- Phase 1 &mdash; System Flow
-- Phase 2 &mdash; Desktop Shell
-- Phase 3 &mdash; Window Manager
-- Phase 4 &mdash; Taskbar and Start Menu
-- Phase 5 &mdash; MVP Applications
-- Phase 6 &mdash; Themes and Persistence
-- Phase 7 &mdash; Responsive Mobile Behavior
-- Phase 8 &mdash; Additional Applications
-- Phase 9 &mdash; Accessibility and Keyboard Support
-- Phase 10 &mdash; Testing and Performance
-- Phase 11 &mdash; Portfolio Content and Deployment
+## Available Scripts
+
+```bash
+npm run dev      # Start the development server
+npm run lint     # Run oxlint
+npm run build    # Create the production build in dist/
+npm run preview  # Preview the production build locally
+```
+
+## Project Structure
+
+```text
+src/
+|-- apps/        Application interfaces and app-local logic
+|-- assets/      Local audio, gallery imagery, and favicon
+|-- components/  Desktop, system, taskbar, Start Menu, and windows
+|-- context/     Persistent interface preferences
+|-- data/        Portfolio content and application registry
+|-- hooks/       Clock, media-query, preferences, and shortcuts
+|-- styles/      Global tokens, themes, and motion rules
+`-- utils/       Storage and window-bound helpers
+```
+
+## Persistence
+
+NebulaDesk uses versioned LocalStorage records for interface preferences and
+Notes, plus small records for Music volume and the Memory Game best score.
+Invalid or unavailable browser storage falls back safely. Open windows and
+other runtime desktop state intentionally reset with a new system session.
+
+## Responsive Behavior
+
+Desktop layouts use movable, minimizable, and maximizable windows. At mobile
+widths, applications become fullscreen below the system taskbar and expose a
+clear Back control. Launchers, app controls, Paint pointer input, and the Start
+Menu remain touch-friendly and safe-area aware.
+
+## Accessibility
+
+Interactive controls use native elements and accessible names. Desktop apps,
+window controls, forms, Start Menu search, Gallery navigation, Music controls,
+and Memory cards are keyboard operable. Focus returns to sensible launchers,
+selected states include non-color cues, and motion follows both the operating
+system preference and the in-app Animations setting.
+
+Global shortcuts:
+
+- `Ctrl/Cmd + Space` toggles the Start Menu
+- `Alt + 1` opens About Me
+- `Alt + 2` opens Projects
+- `Alt + 3` opens Terminal
+- `Alt + 4` opens Settings
+
+## Deployment
+
+Run `npm run build` and deploy the generated `dist/` directory to any static
+host, including Vercel, Netlify, Cloudflare Pages, or GitHub Pages. The project
+is provider-neutral and requires no runtime environment variables or secrets.
+For a GitHub Pages project subpath, configure Vite's `base` value for that
+repository path before building.
 
 ## License
 

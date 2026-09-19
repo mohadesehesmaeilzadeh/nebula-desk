@@ -1,5 +1,6 @@
 function WindowControls({
   appName,
+  isMobile,
   isMaximized,
   onMinimize,
   onMaximize,
@@ -11,29 +12,33 @@ function WindowControls({
   }
 
   return (
-    <div className="window-controls" aria-label={`${appName} window controls`}>
-      <button
-        className="window-control"
-        type="button"
-        data-control="minimize"
-        aria-label={`Minimize ${appName}`}
-        title={`Minimize ${appName}`}
-        onPointerDown={stopPointerDown}
-        onClick={onMinimize}
-      >
-        <span aria-hidden="true" />
-      </button>
-      <button
-        className="window-control"
-        type="button"
-        data-control={isMaximized ? 'restore' : 'maximize'}
-        aria-label={isMaximized ? `Restore ${appName}` : `Maximize ${appName}`}
-        title={isMaximized ? `Restore ${appName}` : `Maximize ${appName}`}
-        onPointerDown={stopPointerDown}
-        onClick={isMaximized ? onRestore : onMaximize}
-      >
-        <span aria-hidden="true" />
-      </button>
+    <div className="window-controls" role="group" aria-label={`${appName} window controls`}>
+      {!isMobile && (
+        <>
+          <button
+            className="window-control"
+            type="button"
+            data-control="minimize"
+            aria-label={`Minimize ${appName}`}
+            title={`Minimize ${appName}`}
+            onPointerDown={stopPointerDown}
+            onClick={onMinimize}
+          >
+            <span aria-hidden="true" />
+          </button>
+          <button
+            className="window-control"
+            type="button"
+            data-control={isMaximized ? 'restore' : 'maximize'}
+            aria-label={isMaximized ? `Restore ${appName}` : `Maximize ${appName}`}
+            title={isMaximized ? `Restore ${appName}` : `Maximize ${appName}`}
+            onPointerDown={stopPointerDown}
+            onClick={isMaximized ? onRestore : onMaximize}
+          >
+            <span aria-hidden="true" />
+          </button>
+        </>
+      )}
       <button
         className="window-control window-control-close"
         type="button"

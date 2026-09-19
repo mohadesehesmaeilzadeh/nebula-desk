@@ -1,0 +1,86 @@
+.terminal-app {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 0;
+  overflow: hidden;
+  color: var(--color-terminal-text);
+  background:
+    linear-gradient(180deg, var(--color-accent-soft), transparent 28%),
+    var(--color-terminal-background);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-small);
+  font-family: var(--font-family-mono);
+}
+
+.terminal-output {
+  min-height: 0;
+  padding: 14px;
+  overflow: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.terminal-entry + .terminal-entry {
+  margin-top: 12px;
+}
+
+.terminal-command-line,
+.terminal-output-line {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.terminal-command-line span,
+.terminal-input-row span {
+  color: var(--color-accent);
+}
+
+.terminal-output-line {
+  color: var(--color-terminal-text);
+}
+
+.terminal-input-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--color-accent-border);
+}
+
+.terminal-input-row input {
+  min-width: 0;
+  color: var(--color-terminal-input);
+  caret-color: var(--color-accent);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.terminal-input-row input:focus-visible {
+  box-shadow: none;
+}
+
+.terminal-input-row:focus-within {
+  outline: 2px solid var(--color-focus);
+  outline-offset: -3px;
+}
+
+@media (max-width: 420px) {
+  .terminal-output,
+  .terminal-input-row {
+    padding: 12px;
+    font-size: 0.82rem;
+  }
+
+  .terminal-input-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .terminal-input-row input {
+    font-size: 1rem;
+  }
+}

@@ -1,7 +1,6 @@
 export function AppIconGlyph({ icon }) {
   const iconClassName = `desktop-icon-glyph desktop-icon-glyph-${icon}`
 
-  
   return (
     <span className={iconClassName} aria-hidden="true">
       <svg viewBox="0 0 48 48" focusable="false">
@@ -36,12 +35,65 @@ export function AppIconGlyph({ icon }) {
             <path d="M24 7v7M24 34v7M7 24h7M34 24h7M12 12l5 5M31 31l5 5M36 12l-5 5M17 31l-5 5" />
           </>
         )}
+        {icon === 'notes' && (
+          <>
+            <path d="M12 7h20l6 6v28H12z" />
+            <path d="M32 7v7h6M18 22h14M18 28h14M18 34h9" />
+          </>
+        )}
+        {icon === 'gallery' && (
+          <>
+            <rect x="7" y="9" width="34" height="30" rx="4" />
+            <circle cx="17" cy="19" r="4" />
+            <path d="M10 35l9-9 6 6 5-5 8 8" />
+          </>
+        )}
+        {icon === 'music' && (
+          <>
+            <path d="M18 36V13l20-4v23" />
+            <ellipse cx="12" cy="36" rx="6" ry="4" />
+            <ellipse cx="32" cy="32" rx="6" ry="4" />
+            <path d="M18 19l20-4" />
+          </>
+        )}
+        {icon === 'paint' && (
+          <>
+            <path d="M9 30c0-12 8-21 20-21 8 0 13 4 13 10 0 4-3 6-7 6h-3c-3 0-4 3-2 5 3 4 0 9-6 9C15 39 9 36 9 30z" />
+            <circle cx="19" cy="19" r="2" />
+            <circle cx="27" cy="15" r="2" />
+            <circle cx="35" cy="18" r="2" />
+            <circle cx="17" cy="28" r="2" />
+          </>
+        )}
+        {icon === 'memory' && (
+          <>
+            <rect x="7" y="8" width="15" height="15" rx="3" />
+            <rect x="26" y="8" width="15" height="15" rx="3" />
+            <rect x="7" y="27" width="15" height="15" rx="3" />
+            <rect x="26" y="27" width="15" height="15" rx="3" />
+            <path d="M12 15h5M31 15h5M12 34h5M31 34h5" />
+          </>
+        )}
+        {icon === 'trash' && (
+          <>
+            <path d="M12 15h24l-2 27H14z" />
+            <path d="M9 15h30M19 15V9h10v6M20 22v13M28 22v13" />
+          </>
+        )}
       </svg>
     </span>
   )
 }
 
-function DesktopIcon({ app, selected, openOnSingleClick, onSelect, onOpen }) {
+function DesktopIcon({
+  app,
+  buttonRef,
+  keyboardShortcut,
+  selected,
+  openOnSingleClick,
+  onSelect,
+  onOpen,
+}) {
   function handleClick(event) {
     event.stopPropagation()
     onSelect(app.id)
@@ -62,7 +114,13 @@ function DesktopIcon({ app, selected, openOnSingleClick, onSelect, onOpen }) {
   }
 
   function handleKeyDown(event) {
-    if (event.key !== 'Enter') {
+    if (
+      (event.key !== 'Enter' && event.key !== ' ') ||
+      event.altKey ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey
+    ) {
       return
     }
 
@@ -73,9 +131,11 @@ function DesktopIcon({ app, selected, openOnSingleClick, onSelect, onOpen }) {
 
   return (
     <button
+      ref={buttonRef}
       className="desktop-icon"
       type="button"
       aria-label={`${app.name} application`}
+      aria-keyshortcuts={keyboardShortcut}
       aria-pressed={selected}
       data-selected={selected ? 'true' : 'false'}
       onClick={handleClick}

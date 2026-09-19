@@ -1,4 +1,5 @@
 import { applications } from '../../data/applications'
+import ApplicationRenderer from '../../apps/ApplicationRenderer'
 import Window from './Window'
 import './Window.css'
 
@@ -15,11 +16,20 @@ function WindowLayer({
   onRestore,
   onMove,
   onInteract,
+  onOpenApplication,
 }) {
   const openWindows = Object.values(windows).filter((windowState) => windowState.isOpen)
   const visibleWindows = openWindows.filter((windowState) => !windowState.isMinimized)
+  const activeVisibleWindow = visibleWindows.find(
+    (windowState) => windowState.appId === activeWindowId,
+  )
+  const fallbackVisibleWindow = [...visibleWindows].sort(
+    (a, b) => b.zIndex - a.zIndex,
+  )[0]
   const renderedWindows = isMobile
-    ? visibleWindows.filter((windowState) => windowState.appId === activeWindowId).slice(-1)
+    ? activeWindowId === null
+      ? []
+      : [activeVisibleWindow || fallbackVisibleWindow].filter(Boolean)
     : visibleWindows
 
   if (renderedWindows.length === 0) {
@@ -30,6 +40,7 @@ function WindowLayer({
     <div
       className="window-layer"
       data-mobile={isMobile ? 'true' : 'false'}
+      role="region"
       aria-label="Open application windows"
       onPointerDownCapture={onInteract}
     >
@@ -53,7 +64,12 @@ function WindowLayer({
             onMaximize={onMaximize}
             onRestore={onRestore}
             onMove={onMove}
-          />
+          >
+            <ApplicationRenderer
+              appId={app.id}
+              onOpenApplication={onOpenApplication}
+            />
+          </Window>
         )
       })}
     </div>

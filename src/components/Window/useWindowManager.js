@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer } from 'react'
 import { applications } from '../../data/applications'
+import { MOBILE_MEDIA_QUERY } from '../../hooks/useMediaQuery'
 import { getUsableDesktopBounds } from '../../utils/windowBounds'
 import { initialWindowState, WINDOW_ACTION, windowReducer } from './windowReducer'
 
@@ -30,10 +31,11 @@ function useWindowManager(desktopRef) {
     [getDesktopBounds],
   )
 
-  const closeWindow = useCallback((appId) => {
+  const closeWindow = useCallback((appId, returnToDesktop = false) => {
     dispatch({
       type: WINDOW_ACTION.CLOSE_WINDOW,
       appId,
+      returnToDesktop,
     })
   }, [])
 
@@ -44,10 +46,11 @@ function useWindowManager(desktopRef) {
     })
   }, [])
 
-  const minimizeWindow = useCallback((appId) => {
+  const minimizeWindow = useCallback((appId, returnToDesktop = false) => {
     dispatch({
       type: WINDOW_ACTION.MINIMIZE_WINDOW,
       appId,
+      returnToDesktop,
     })
   }, [])
 
@@ -93,10 +96,24 @@ function useWindowManager(desktopRef) {
   )
 
   useEffect(() => {
+    let animationFrameId = null
+
     function handleResize() {
-      dispatch({
-        type: WINDOW_ACTION.CLAMP_WINDOWS,
-        desktopBounds: getDesktopBounds(),
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId)
+      }
+
+      animationFrameId = window.requestAnimationFrame(() => {
+        animationFrameId = null
+
+        if (window.matchMedia(MOBILE_MEDIA_QUERY).matches) {
+          return
+        }
+
+        dispatch({
+          type: WINDOW_ACTION.CLAMP_WINDOWS,
+          desktopBounds: getDesktopBounds(),
+        })
       })
     }
 
@@ -104,6 +121,10 @@ function useWindowManager(desktopRef) {
 
     return () => {
       window.removeEventListener('resize', handleResize)
+
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId)
+      }
     }
   }, [getDesktopBounds])
 

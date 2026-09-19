@@ -1,14 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import WindowChrome from './WindowChrome'
 
-function getPlaceholderMessage(app) {
-  if (app.id === 'terminal') {
-    return 'Terminal command interface will be implemented in Phase 5.'
-  }
-
-  return `${app.name} application content will be implemented in Phase 5.`
-}
-
 function Window({
   app,
   windowState,
@@ -20,6 +12,7 @@ function Window({
   onMaximize,
   onRestore,
   onMove,
+  children,
 }) {
   const windowRef = useRef(null)
   const dragRef = useRef(null)
@@ -27,7 +20,7 @@ function Window({
   const titleId = `window-title-${app.id}`
 
   useEffect(() => {
-    if (isActive) {
+    if (isActive && !windowRef.current?.contains(document.activeElement)) {
       windowRef.current?.focus({ preventScroll: true })
     }
   }, [isActive])
@@ -117,6 +110,7 @@ function Window({
       style={windowStyle}
       tabIndex="-1"
       aria-labelledby={titleId}
+      data-app-id={app.id}
       data-active={isActive ? 'true' : 'false'}
       data-mobile={isMobile ? 'true' : 'false'}
       onPointerDown={handleWindowPointerDown}
@@ -124,8 +118,11 @@ function Window({
     >
       <WindowChrome
         app={app}
+        titleId={titleId}
         isActive={isActive}
+        isMobile={isMobile}
         isMaximized={windowState.isMaximized}
+        onBack={() => onMinimize(app.id)}
         onMinimize={() => onMinimize(app.id)}
         onMaximize={() => onMaximize(app.id)}
         onRestore={() => onRestore(app.id)}
@@ -136,9 +133,7 @@ function Window({
         onTitleDoubleClick={handleTitleDoubleClick}
       />
       <section className="window-content" aria-labelledby={titleId}>
-        <p className="window-content-eyebrow">NebulaDesk Application</p>
-        <h2 id={titleId}>{app.name}</h2>
-        <p>{getPlaceholderMessage(app)}</p>
+        {children}
       </section>
     </article>
   )

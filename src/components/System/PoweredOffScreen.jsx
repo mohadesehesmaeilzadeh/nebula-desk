@@ -5,7 +5,7 @@ function PoweredOffScreen({ onPowerOn }) {
         <div className="power-glyph" aria-hidden="true" />
         <h1 id="powered-off-title">NebulaDesk is off</h1>
         <p className="system-hint">Power is available when you are ready.</p>
-        <button className="system-button" type="button" onClick={onPowerOn}>
+        <button className="system-button" type="button" autoFocus onClick={onPowerOn}>
           Turn on NebulaDesk
         </button>
       </section>

@@ -117,7 +117,9 @@ export function windowReducer(state, action) {
         windows: nextWindows,
         activeWindowId:
           state.activeWindowId === action.appId
-            ? getNextVisibleWindowId(nextWindows, action.appId)
+            ? action.returnToDesktop
+              ? null
+              : getNextVisibleWindowId(nextWindows, action.appId)
             : state.activeWindowId,
       }
     }
@@ -145,7 +147,9 @@ export function windowReducer(state, action) {
         windows: nextWindows,
         activeWindowId:
           state.activeWindowId === action.appId
-            ? getNextVisibleWindowId(nextWindows, action.appId)
+            ? action.returnToDesktop
+              ? null
+              : getNextVisibleWindowId(nextWindows, action.appId)
             : state.activeWindowId,
       }
     }

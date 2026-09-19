@@ -13,6 +13,7 @@ function SleepScreen({ onWake }) {
         <button
           className="system-button system-button-secondary"
           type="button"
+          autoFocus
           onClick={handleWakeButtonClick}
         >
           Wake
