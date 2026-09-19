@@ -6,13 +6,18 @@ desktop environment instead of a traditional multi-section page.
 
 ## Current Status
 
-Phase 7 &mdash; Responsive Mobile Experience
+Phase 8B &mdash; Music Player &amp; Paint
 
 The repository now includes the core NebulaDesk system shell, desktop
 environment, window manager, taskbar, Start Menu, functional MVP applications,
 and persistent interface personalization. Desktop viewports retain floating,
 draggable windows, while mobile viewports use focused fullscreen applications,
 touch-sized controls, a compact taskbar, and a dismissible Start Menu sheet.
+
+Notes adds versioned LocalStorage persistence for plain-text writing. Gallery
+uses local NebulaDesk imagery with a responsive grid and an in-app viewer.
+Music Player uses original local WAV samples with native browser playback,
+while Paint provides a responsive pointer-enabled HTML Canvas workspace.
 
 NebulaDesk stores theme, accent, sound, and animation preferences locally in
 the browser using LocalStorage. No preference data is sent to a server.
@@ -27,8 +32,13 @@ the browser using LocalStorage. No preference data is sent to a server.
 - Reusable windows
 - About
 - Projects
+- Skills
 - Terminal
 - Settings
+- Notes
+- Gallery
+- Music Player
+- Paint
 - Responsive mobile behavior
 
 ## Technology

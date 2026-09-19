@@ -59,4 +59,52 @@ export const applications = [
       height: 460,
     },
   },
+  {
+    id: 'notes',
+    name: 'Notes',
+    icon: 'notes',
+    showOnDesktop: true,
+    showInStartMenu: true,
+    keywords: ['notes', 'memo', 'text', 'writing'],
+    window: {
+      width: 720,
+      height: 520,
+    },
+  },
+  {
+    id: 'gallery',
+    name: 'Gallery',
+    icon: 'gallery',
+    showOnDesktop: true,
+    showInStartMenu: true,
+    keywords: ['gallery', 'photos', 'images', 'pictures'],
+    window: {
+      width: 820,
+      height: 560,
+    },
+  },
+  {
+    id: 'music',
+    name: 'Music Player',
+    icon: 'music',
+    showOnDesktop: true,
+    showInStartMenu: true,
+    keywords: ['music', 'audio', 'player', 'tracks'],
+    window: {
+      width: 820,
+      height: 560,
+    },
+  },
+  {
+    id: 'paint',
+    name: 'Paint',
+    icon: 'paint',
+    showOnDesktop: true,
+    showInStartMenu: true,
+    keywords: ['paint', 'draw', 'canvas', 'sketch'],
+    window: {
+      width: 900,
+      height: 620,
+    },
+  },
 ]

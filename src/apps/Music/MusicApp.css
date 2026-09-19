@@ -1,0 +1,319 @@
+.music-app {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.85fr);
+  gap: 14px;
+  overflow: hidden;
+}
+
+.music-app audio {
+  display: none;
+}
+
+.music-now-playing,
+.music-library {
+  min-width: 0;
+  min-height: 0;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.music-now-playing {
+  display: grid;
+  grid-template-rows: minmax(124px, 1fr) auto auto auto auto;
+  gap: 14px;
+  padding: 18px;
+  overflow: auto;
+}
+
+.music-art {
+  display: flex;
+  min-height: 124px;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    linear-gradient(145deg, var(--color-accent-soft), var(--color-accent-secondary-soft)),
+    var(--color-background-deep);
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-small);
+}
+
+.music-art span {
+  width: 8px;
+  height: 34%;
+  background: var(--color-accent);
+  border-radius: var(--radius-round);
+  box-shadow: 0 0 18px var(--color-accent-glow);
+}
+
+.music-art span:nth-child(2),
+.music-art span:nth-child(4) {
+  height: 58%;
+}
+
+.music-art span:nth-child(3) {
+  height: 78%;
+  background: var(--color-accent-secondary);
+}
+
+.music-track-copy,
+.music-library header {
+  min-width: 0;
+}
+
+.music-track-copy p,
+.music-track-copy h2,
+.music-track-copy span,
+.music-library header p,
+.music-library header h3,
+.music-library header span,
+.music-error {
+  margin: 0;
+}
+
+.music-track-copy p,
+.music-library header p {
+  font-family: var(--font-family-mono);
+  font-size: 0.74rem;
+  color: var(--color-accent);
+  text-transform: uppercase;
+}
+
+.music-track-copy h2 {
+  margin-top: 3px;
+  font-size: 1.55rem;
+  overflow-wrap: anywhere;
+}
+
+.music-track-copy span,
+.music-library header span {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-text-muted);
+}
+
+.music-transport {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.music-transport button,
+.music-volume-group button {
+  min-height: 44px;
+  padding: 9px 12px;
+  color: var(--color-text-primary);
+  font-weight: 700;
+  background: var(--color-surface-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-small);
+}
+
+.music-transport .music-play-button {
+  color: var(--color-text-on-accent);
+  background: var(--color-accent);
+  border-color: transparent;
+}
+
+.music-progress-group,
+.music-volume-group {
+  display: grid;
+  min-width: 0;
+}
+
+.music-progress-group {
+  gap: 4px;
+}
+
+.music-progress-group input,
+.music-volume-group input {
+  width: 100%;
+  accent-color: var(--color-accent);
+}
+
+.music-progress-group input {
+  min-height: 28px;
+}
+
+.music-time {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.music-volume-group {
+  grid-template-columns: auto auto minmax(80px, 1fr) 42px;
+  gap: 10px;
+  align-items: center;
+}
+
+.music-volume-group label,
+.music-volume-group output {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+}
+
+.music-volume-group output {
+  text-align: right;
+  font-family: var(--font-family-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.music-error {
+  color: var(--color-text-primary);
+  line-height: 1.45;
+}
+
+.music-library {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.music-library header {
+  padding: 16px;
+  background: var(--color-surface-subtle);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.music-library header h3 {
+  margin-top: 3px;
+  font-size: 1.2rem;
+}
+
+.music-track-list {
+  min-height: 0;
+  padding: 8px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.music-track-item {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  width: 100%;
+  min-height: 58px;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  color: var(--color-text-primary);
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-small);
+}
+
+.music-track-item:hover,
+.music-track-item[data-current="true"] {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent-border);
+}
+
+.music-track-number,
+.music-track-item time {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.music-track-details {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.music-track-details strong,
+.music-track-details small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.music-track-details small {
+  color: var(--color-text-muted);
+}
+
+.music-empty {
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.music-empty h2,
+.music-empty p {
+  margin: 0;
+}
+
+.music-empty p {
+  margin-top: 8px;
+  color: var(--color-text-muted);
+}
+
+@media (max-width: 767px) {
+  .music-app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(210px, 1fr);
+    overflow: auto;
+  }
+
+  .music-now-playing {
+    grid-template-columns: 88px minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto auto;
+    align-items: center;
+    padding: 12px;
+  }
+
+  .music-art {
+    height: 88px;
+    min-height: 88px;
+    grid-row: 1;
+  }
+
+  .music-track-copy {
+    grid-column: 2;
+  }
+
+  .music-track-copy h2 {
+    font-size: 1.2rem;
+  }
+
+  .music-transport,
+  .music-progress-group,
+  .music-volume-group,
+  .music-error {
+    grid-column: 1 / -1;
+  }
+
+  .music-volume-group {
+    grid-template-columns: auto minmax(80px, 1fr) 42px;
+  }
+
+  .music-volume-group label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}
+
+@media (max-width: 380px) {
+  .music-now-playing {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .music-art {
+    height: 72px;
+    min-height: 72px;
+  }
+
+  .music-transport button {
+    padding-inline: 6px;
+  }
+}

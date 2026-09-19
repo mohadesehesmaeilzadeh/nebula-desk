@@ -36,6 +36,36 @@ export function AppIconGlyph({ icon }) {
             <path d="M24 7v7M24 34v7M7 24h7M34 24h7M12 12l5 5M31 31l5 5M36 12l-5 5M17 31l-5 5" />
           </>
         )}
+        {icon === 'notes' && (
+          <>
+            <path d="M12 7h20l6 6v28H12z" />
+            <path d="M32 7v7h6M18 22h14M18 28h14M18 34h9" />
+          </>
+        )}
+        {icon === 'gallery' && (
+          <>
+            <rect x="7" y="9" width="34" height="30" rx="4" />
+            <circle cx="17" cy="19" r="4" />
+            <path d="M10 35l9-9 6 6 5-5 8 8" />
+          </>
+        )}
+        {icon === 'music' && (
+          <>
+            <path d="M18 36V13l20-4v23" />
+            <ellipse cx="12" cy="36" rx="6" ry="4" />
+            <ellipse cx="32" cy="32" rx="6" ry="4" />
+            <path d="M18 19l20-4" />
+          </>
+        )}
+        {icon === 'paint' && (
+          <>
+            <path d="M9 30c0-12 8-21 20-21 8 0 13 4 13 10 0 4-3 6-7 6h-3c-3 0-4 3-2 5 3 4 0 9-6 9C15 39 9 36 9 30z" />
+            <circle cx="19" cy="19" r="2" />
+            <circle cx="27" cy="15" r="2" />
+            <circle cx="35" cy="18" r="2" />
+            <circle cx="17" cy="28" r="2" />
+          </>
+        )}
       </svg>
     </span>
   )
