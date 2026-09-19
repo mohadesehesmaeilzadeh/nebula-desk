@@ -10,14 +10,9 @@ function ResourceLink({ href, children }) {
   )
 }
 
-function DetailList({ title, items, emptyMessage }) {
-  if (!items.length) {
-    return (
-      <section className="project-detail-section">
-        <h4>{title}</h4>
-        <p className="project-muted">{emptyMessage}</p>
-      </section>
-    )
+function DetailList({ title, items }) {
+  if (!items?.length) {
+    return null
   }
 
   return (
@@ -33,7 +28,7 @@ function DetailList({ title, items, emptyMessage }) {
 }
 
 function ProjectPreview({ project }) {
-  const screenshot = project.screenshots[0]
+  const screenshot = project.screenshots?.[0]
 
   if (!screenshot?.src) {
     return (
@@ -43,7 +38,14 @@ function ProjectPreview({ project }) {
     )
   }
 
-  return <img src={screenshot.src} alt={screenshot.alt || `${project.name} screenshot`} />
+  return (
+    <img
+      src={screenshot.src}
+      alt={screenshot.alt || `${project.name} screenshot`}
+      loading="lazy"
+      decoding="async"
+    />
+  )
 }
 
 function ProjectDetails({ project }) {
@@ -74,7 +76,7 @@ function ProjectDetails({ project }) {
 
       <p className="project-description">{project.description || project.shortDescription}</p>
 
-      {project.technologies.length > 0 && (
+      {project.technologies?.length > 0 && (
         <div className="project-tech-list" aria-label="Technologies">
           {project.technologies.map((technology) => (
             <span key={technology}>{technology}</span>
@@ -85,12 +87,10 @@ function ProjectDetails({ project }) {
       <DetailList
         title="Features"
         items={project.features}
-        emptyMessage="Feature notes will be added soon."
       />
       <DetailList
         title="Challenges"
         items={project.challenges}
-        emptyMessage="Challenge notes will be added soon."
       />
     </section>
   )

@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { loadNotes, saveNotes } from '../../utils/notesStorage'
 import './NotesApp.css'
 
+const SAVE_DELAY = 300
+
 function sortNotes(notes) {
   return [...notes].sort((a, b) => {
     const updatedDifference = Date.parse(b.updatedAt) - Date.parse(a.updatedAt)
@@ -31,6 +33,8 @@ function NotesApp() {
   const [mobileEditorVisible, setMobileEditorVisible] = useState(false)
   const [saveStatus, setSaveStatus] = useState('Saved locally')
   const lastPersistedNotes = useRef(notes)
+  const pendingNotesRef = useRef(notes)
+  const saveTimerRef = useRef(null)
   const newNoteButtonRef = useRef(null)
   const noteButtonRefs = useRef(new Map())
   const titleInputRef = useRef(null)
@@ -61,13 +65,48 @@ function NotesApp() {
   }, [notes, selectedNoteId])
 
   useEffect(() => {
+    pendingNotesRef.current = notes
+
     if (notes === lastPersistedNotes.current) {
-      return
+      return undefined
     }
 
-    setSaveStatus(saveNotes(notes) ? 'Saved locally' : 'Storage unavailable')
-    lastPersistedNotes.current = notes
+    setSaveStatus('Saving...')
+    const timerId = window.setTimeout(() => {
+      const didSave = saveNotes(notes)
+
+      setSaveStatus(didSave ? 'Saved locally' : 'Storage unavailable')
+
+      if (didSave) {
+        lastPersistedNotes.current = notes
+      }
+
+      if (saveTimerRef.current === timerId) {
+        saveTimerRef.current = null
+      }
+    }, SAVE_DELAY)
+    saveTimerRef.current = timerId
+
+    return () => {
+      window.clearTimeout(timerId)
+
+      if (saveTimerRef.current === timerId) {
+        saveTimerRef.current = null
+      }
+    }
   }, [notes])
+
+  useEffect(() => {
+    return () => {
+      if (saveTimerRef.current !== null) {
+        window.clearTimeout(saveTimerRef.current)
+      }
+
+      if (pendingNotesRef.current !== lastPersistedNotes.current) {
+        saveNotes(pendingNotesRef.current)
+      }
+    }
+  }, [])
 
   useEffect(() => {
     if (!shouldFocusEditorRef.current || !selectedNoteId || !mobileEditorVisible) {

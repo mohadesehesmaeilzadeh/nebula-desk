@@ -51,12 +51,12 @@ function help() {
 
 function about() {
   return [
-    `${profile.name}`,
+    profile.name || 'Portfolio profile',
     `${profile.title}`,
     '',
     profile.shortBio,
-    profile.location ? `Location: ${profile.location}` : 'Location: Not configured yet',
-  ]
+    profile.location ? `Location: ${profile.location}` : null,
+  ].filter(Boolean)
 }
 
 function listSkills() {
@@ -68,7 +68,9 @@ function listSkills() {
 
 function listProjects() {
   return formatList(
-    projects.map((project) => `${project.name}: ${project.shortDescription || 'Details pending'}`),
+    projects.map((project) =>
+      project.shortDescription ? `${project.name}: ${project.shortDescription}` : project.name,
+    ),
     'No projects configured yet.',
   )
 }
@@ -90,17 +92,17 @@ function contact() {
     contactLines.push(`${social.label}: ${social.url}`)
   })
 
-  return formatList(contactLines, 'No contact information configured yet.')
+  return formatList(contactLines, 'No public contact details are listed.')
 }
 
 function listSocials() {
-  if (socials.length === 0) {
-    return ['No social links configured yet.']
+  const configuredSocials = socials.filter((social) => social.url)
+
+  if (configuredSocials.length === 0) {
+    return ['No public social links are listed.']
   }
 
-  return socials.map((social) =>
-    social.url ? `${social.label}: ${social.url}` : `${social.label}: Not configured yet`,
-  )
+  return configuredSocials.map((social) => `${social.label}: ${social.url}`)
 }
 
 function date() {
@@ -113,7 +115,7 @@ function date() {
 }
 
 function whoami() {
-  return [`${profile.name} - ${profile.title}`]
+  return [profile.name ? `${profile.name} - ${profile.title}` : profile.title]
 }
 
 function open(args) {

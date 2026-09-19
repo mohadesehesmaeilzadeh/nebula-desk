@@ -3,17 +3,22 @@ import { profile } from '../../data/profile'
 import { socials } from '../../data/socials'
 import './AboutApp.css'
 
+const hasContactDetails = Boolean(
+  profile.contact?.email ||
+  profile.location ||
+  socials.some((social) => social.url),
+)
 const sections = [
-  { id: 'profile', label: 'Profile' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'education', label: 'Education' },
-  { id: 'interests', label: 'Interests' },
-  { id: 'contact', label: 'Contact' },
-]
+  { id: 'profile', label: 'Profile', isVisible: true },
+  { id: 'experience', label: 'Experience', isVisible: profile.experience.length > 0 },
+  { id: 'education', label: 'Education', isVisible: profile.education.length > 0 },
+  { id: 'interests', label: 'Interests', isVisible: profile.interests.length > 0 },
+  { id: 'contact', label: 'Contact', isVisible: hasContactDetails },
+].filter((section) => section.isVisible)
 
-function TimelineList({ items, emptyMessage }) {
+function TimelineList({ items }) {
   if (!items.length) {
-    return <p className="about-empty">{emptyMessage}</p>
+    return null
   }
 
   return (
@@ -37,7 +42,7 @@ function ContactPanel() {
   const hasEmail = Boolean(profile.contact?.email)
 
   if (!hasEmail && availableSocials.length === 0 && !profile.location) {
-    return <p className="about-empty">No contact information configured yet.</p>
+    return null
   }
 
   return (
@@ -72,35 +77,25 @@ function renderSection(activeSection) {
       return (
         <>
           <h3>Experience</h3>
-          <TimelineList
-            items={profile.experience}
-            emptyMessage="Experience details will be added soon."
-          />
+          <TimelineList items={profile.experience} />
         </>
       )
     case 'education':
       return (
         <>
           <h3>Education</h3>
-          <TimelineList
-            items={profile.education}
-            emptyMessage="Education details will be added soon."
-          />
+          <TimelineList items={profile.education} />
         </>
       )
     case 'interests':
       return (
         <>
           <h3>Interests</h3>
-          {profile.interests.length > 0 ? (
-            <ul className="about-chip-list">
-              {profile.interests.map((interest) => (
-                <li key={interest}>{interest}</li>
-              ))}
-            </ul>
-          ) : (
-            <p className="about-empty">Interests will be added soon.</p>
-          )}
+          <ul className="about-chip-list">
+            {profile.interests.map((interest) => (
+              <li key={interest}>{interest}</li>
+            ))}
+          </ul>
         </>
       )
     case 'contact':
@@ -114,21 +109,27 @@ function renderSection(activeSection) {
     default:
       return (
         <>
-          <h3>Developer Identity</h3>
+          <h3>Developer Profile</h3>
           <p>{profile.shortBio}</p>
           <dl className="about-profile-grid">
-            <div>
-              <dt>Name</dt>
-              <dd>{profile.name}</dd>
-            </div>
-            <div>
-              <dt>Role</dt>
-              <dd>{profile.title}</dd>
-            </div>
-            <div>
-              <dt>Location</dt>
-              <dd>{profile.location || 'Not configured yet'}</dd>
-            </div>
+            {profile.name && (
+              <div>
+                <dt>Name</dt>
+                <dd>{profile.name}</dd>
+              </div>
+            )}
+            {profile.title && (
+              <div>
+                <dt>Role</dt>
+                <dd>{profile.title}</dd>
+              </div>
+            )}
+            {profile.location && (
+              <div>
+                <dt>Location</dt>
+                <dd>{profile.location}</dd>
+              </div>
+            )}
           </dl>
         </>
       )
@@ -158,11 +159,11 @@ function AboutApp() {
       <section className="about-panel" aria-live="polite">
         <div className="about-identity">
           <div className="about-avatar" aria-hidden="true">
-            {profile.name === 'Your Name' ? 'YN' : profile.name.slice(0, 2).toUpperCase()}
+            {profile.name ? profile.name.slice(0, 2).toUpperCase() : 'ND'}
           </div>
           <div>
             <p>About Me</p>
-            <h2>{profile.name}</h2>
+            <h2>{profile.name || 'Portfolio Profile'}</h2>
             <span>{profile.title}</span>
           </div>
         </div>

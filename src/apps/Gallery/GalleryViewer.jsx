@@ -51,7 +51,12 @@ function GalleryViewer({ item, hasPrevious, hasNext, onPrevious, onNext, onClose
             Image unavailable
           </div>
         ) : (
-          <img src={item.src} alt={item.alt} onError={() => setImageFailed(true)} />
+          <img
+            src={item.src}
+            alt={item.alt}
+            decoding="async"
+            onError={() => setImageFailed(true)}
+          />
         )}
       </figure>
 

@@ -1,5 +1,5 @@
 export const profile = {
-  name: 'Your Name',
+  name: '',
   title: 'Frontend Developer',
   shortBio:
     'Frontend developer focused on responsive, interactive, and user-friendly interfaces.',

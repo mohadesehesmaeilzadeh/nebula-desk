@@ -117,7 +117,7 @@
 
 .about-profile-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 10px;
 }
 
@@ -194,16 +194,8 @@
   display: block;
 }
 
-.about-timeline span,
-.about-empty {
+.about-timeline span {
   color: var(--color-text-muted);
-}
-
-.about-empty {
-  padding: 14px;
-  background: var(--color-surface-subtle);
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-small);
 }
 
 @container (max-width: 560px) {

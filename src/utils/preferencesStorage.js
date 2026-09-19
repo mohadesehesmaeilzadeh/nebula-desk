@@ -76,13 +76,3 @@ export function savePreferences(preferences) {
     return false
   }
 }
-
-export function clearPreferences() {
-  try {
-    window.localStorage.removeItem(PREFERENCES_STORAGE_KEY)
-    return true
-  } catch {
-    console.warn('NebulaDesk could not clear interface preferences.')
-    return false
-  }
-}

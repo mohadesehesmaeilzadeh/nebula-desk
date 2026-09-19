@@ -100,6 +100,7 @@ function GalleryApp() {
                     src={item.src}
                     alt={item.alt}
                     loading="lazy"
+                    decoding="async"
                     onError={() => markImageFailed(item.id)}
                   />
                 )}
