@@ -1,683 +1,137 @@
-# 🪐 NebulaDesk
+# NebulaDesk
 
-**A frontend-only interactive portfolio disguised as a fictional desktop operating system.**
+**A frontend portfolio built as a desktop you can explore.**
 
-NebulaDesk is a React-based desktop experience built to explore advanced frontend architecture, state management, browser APIs, responsive interfaces, accessibility, and reusable UI systems.
+NebulaDesk turns portfolio content into a browser-based operating system: open apps, manage windows, search the Start Menu, and move between projects, skills, and contact information. It runs entirely in the browser with React and Vite; no backend or account is required.
 
-Instead of presenting portfolio content as a traditional website, NebulaDesk turns it into an operating-system-inspired environment with windows, applications, system states, persistent preferences, keyboard shortcuts, and desktop interactions.
+![NebulaDesk desktop with the Terminal app open](docs/screenshots/desktop-terminal.png)
 
-> **Project Status:** Feature-complete portfolio experience — currently moving toward production-level engineering quality.
+## Demo
 
----
+A public demo has not been deployed yet. To try the current version locally, follow [Installation](#installation), then open the URL printed by Vite. The first visit shows a short boot sequence and a lock screen; select **Enter Desktop** to continue.
 
-## ✨ Demo
+## Screenshots
 
-A production deployment will be added as part of the upcoming release process.
+The desktop image above was captured from the running app. These views show the other side of the system flow:
 
-```text
-Live Demo: Coming soon
-```
+| Startup | Lock screen |
+| --- | --- |
+| ![NebulaDesk startup sequence](src/assets/gallery/startup-sequence.png) | ![NebulaDesk lock screen](src/assets/gallery/lock-screen.png) |
 
-The final release will include:
+## Features
 
-- Production deployment
-- Optimized build
-- PWA installation
-- Automated testing
-- CI validation
-- Performance auditing
+- **Desktop shell:** boot, lock, sleep, restart, shutdown, desktop icons, taskbar, and searchable Start Menu.
+- **Window manager:** open, focus, move, minimize, restore, maximize, and close apps. On smaller screens, apps switch to a full-screen interaction model.
+- **Portfolio apps:** About Me, Projects, Skills, Gallery, and a Terminal that reads from the same portfolio data.
+- **Other apps:** Notes, Settings, Music Player, Paint, Memory Game, and Trash.
+- **Personalization:** dark and light themes, accent colors, sound and animation preferences.
+- **Persistence:** preferences, notes, music volume, and the Memory Game best score are stored in the browser. Open windows and focus state reset with a new desktop session.
 
----
+Keyboard shortcuts: `Alt+1` opens About Me, `Alt+2` Projects, `Alt+3` Terminal, and `Alt+4` Settings. `Ctrl/Command+Space` toggles the Start Menu. The Terminal supports commands such as `help`, `about`, `projects`, `skills`, `contact`, and `open <app>`.
 
-## 📸 Screenshots
+## Architecture
 
-Project screenshots and a short demo GIF will be added alongside the production deployment.
-
-Planned preview content:
-
-- Desktop environment
-- Start Menu
-- Multiple application windows
-- Terminal
-- Settings and themes
-- Notes
-- Gallery
-- Music Player
-- Paint
-- Memory Game
-- Mobile application mode
-
----
-
-# 🚀 Features
-
-## 🖥 Desktop Experience
-
-NebulaDesk recreates the behavior of a lightweight desktop operating system directly in the browser.
-
-It includes:
-
-- Boot screen
-- Lock screen
-- Desktop environment
-- Sleep mode
-- Restart flow
-- Shutdown flow
-- Power-on state
-- Desktop application launchers
-- Taskbar
-- Start Menu
-- Active application switching
-
----
-
-## 🪟 Window Manager
-
-Applications run inside reusable desktop windows.
-
-The window system supports:
-
-- Opening applications
-- Closing applications
-- Minimizing windows
-- Restoring minimized windows
-- Maximizing windows
-- Moving windows
-- Window focus management
-- Active window tracking
-- Multiple open applications
-
-The window manager is reusable and does not contain application-specific logic.
-
----
-
-## 📱 Responsive Application System
-
-NebulaDesk adapts its interaction model depending on the device.
-
-### Desktop
-
-Applications appear as floating windows that can be moved, minimized, maximized, focused, and closed.
-
-### Mobile
-
-Applications switch to a fullscreen experience designed for touch interaction, including clear Back navigation, touch-friendly controls, safe-area-aware layouts, and responsive application interfaces.
-
----
-
-# 🧩 Applications
-
-NebulaDesk currently includes:
-
-- 👤 **About Me** — Personal and professional information
-- 💼 **Projects** — Selected portfolio work
-- 🛠 **Skills** — Technologies and development skills
-- 💻 **Terminal** — Command-inspired portfolio interface
-- ⚙️ **Settings** — Theme, accent color, and animation preferences
-- 📝 **Notes** — Persistent browser-based notes
-- 🖼 **Gallery** — Interactive image gallery
-- 🎵 **Music Player** — Audio player with persistent volume
-- 🎨 **Paint** — Canvas-based drawing app
-- 🧠 **Memory Game** — Memory game with persistent best score
-- 🗑 **Trash** — Desktop-inspired Trash application
-
----
-
-# 🎨 Customization
-
-### Themes
-
-- Dark
-- Light
-
-### Accent Colors
-
-- Cyan
-- Purple
-- Blue
-
-Preferences are persisted locally so the interface can restore the user's configuration after a refresh.
-
----
-
-# 💾 Persistence
-
-NebulaDesk uses versioned browser storage for selected persistent state.
-
-Currently persisted data includes:
-
-- Interface preferences
-- Theme
-- Accent color
-- Animation preference
-- Notes
-- Music volume
-- Memory Game best score
-
-Runtime desktop state such as currently opened windows intentionally resets when a new system session begins.
-
-Storage operations include safe fallback behavior when browser storage is unavailable or contains invalid data.
-
----
-
-# 🏗 Architecture
-
-NebulaDesk is structured around separation between **system behavior**, **applications**, and **portfolio data**.
+The desktop shell owns system state. The app registry provides the same app metadata to desktop icons, the Start Menu, taskbar, Terminal, and window renderer. Individual apps own their content and local interactions.
 
 ```text
-                    NebulaDesk
-                        │
-                  System Shell
-                        │
-        ┌───────────────┼───────────────┐
-        │               │               │
-      Desktop        Taskbar        Start Menu
-        │               │               │
-        └───────────────┼───────────────┘
-                        │
-                  App Registry
-                        │
-                 Window Manager
-                        │
-        ┌───────────────┼───────────────┐
-        │               │               │
-      App A           App B           App C
+SystemShell (boot, lock, sleep, power)
+  -> Desktop (icons, Start Menu, taskbar)
+    -> Window manager (open windows, stacking, bounds, focus)
+      -> ApplicationRenderer -> apps
+
+src/data/ (profile, projects, skills, socials, gallery)
+  -> portfolio apps and Terminal
+
+Storage utilities -> browser localStorage
 ```
 
-## Shared Application Registry
+The main boundaries are in `src/components/System/`, `src/components/Desktop/`, `src/components/Window/`, `src/apps/`, `src/data/`, and `src/utils/`. Keeping portfolio content in `src/data/` lets the interface reuse it without duplicating personal details across apps.
 
-Application metadata is defined through a shared registry consumed by the Desktop, Start Menu, Taskbar, Terminal `open` command, Window Manager, and application renderer.
+## Tech Stack
 
-This avoids duplicating application-specific logic throughout the desktop shell.
+| Area | Tools |
+| --- | --- |
+| Interface | React 19, JavaScript, CSS |
+| Build | Vite 8 |
+| Browser features | localStorage, Canvas API, audio, Pointer Events |
+| Quality checks | oxlint, Vitest, jsdom, React Testing Library, jest-dom |
 
-## State Ownership
+## Testing
 
-```text
-System State
-│
-├── Desktop / Window State
-├── System Status
-├── Active Applications
-└── Window Focus
-
-Preference State
-│
-├── Theme
-├── Accent Color
-└── Animation Preference
-
-Application State
-│
-├── Notes
-├── Music
-├── Paint
-├── Gallery
-└── Memory Game
-```
-
-Applications are responsible for their internal state while shared system behavior remains inside the desktop and preference layers.
-
----
-
-# 🛠 Tech Stack
-
-## Core
-
-- React 19
-- JavaScript
-- CSS
-- Vite
-
-## Browser APIs
-
-- LocalStorage
-- Canvas API
-- Audio API
-- Pointer Events
-- Keyboard Events
-- Media Queries
-
-## Tooling
-
-- Vite
-- oxlint
-- npm
-- Git
-- GitHub
-
----
-
-# 📂 Project Structure
-
-```text
-src/
-│
-├── apps/          # Application interfaces and app-specific logic
-├── assets/        # Images, audio files and local assets
-├── components/    # Desktop, system, taskbar, Start Menu and windows
-├── context/       # Shared persistent preferences
-├── data/          # Portfolio content and application registry
-├── hooks/         # Clock, media-query, preferences and shortcuts
-├── styles/        # Global styles, design tokens, themes and motion
-└── utils/         # Storage and window-related utilities
-```
-
----
-
-# ⌨️ Keyboard Shortcuts
-
-| Shortcut | Action |
-|---|---|
-| `Ctrl / Cmd + Space` | Toggle Start Menu |
-| `Alt + 1` | Open About Me |
-| `Alt + 2` | Open Projects |
-| `Alt + 3` | Open Terminal |
-| `Alt + 4` | Open Settings |
-
-Keyboard support is designed as part of the application architecture rather than as an afterthought.
-
----
-
-# ♿ Accessibility
-
-Current accessibility work includes:
-
-- Semantic native controls
-- Accessible names for interactive elements
-- Keyboard-operable desktop applications
-- Keyboard-accessible Start Menu
-- Keyboard-accessible Gallery
-- Keyboard-accessible Music controls
-- Keyboard-accessible Memory Game
-- Visible focus states
-- Non-color-only selected states
-- Sensible focus restoration
-- Reduced-motion support
-- In-app animation preference
-
-The interface respects both the operating system's reduced-motion preference and NebulaDesk's internal animation setting.
-
----
-
-# 🧪 Testing
-
-Automated testing is the next major engineering milestone for NebulaDesk.
-
-## Unit & Component Testing
-
-Planned stack:
-
-- Vitest
-- React Testing Library
-- jest-dom
-- user-event
-
-Initial test coverage will focus on:
-
-- Storage utilities
-- Preference persistence
-- Application registry
-- Settings behavior
-- Start Menu interactions
-- Window lifecycle
-- Window minimize / restore behavior
-
-## End-to-End Testing
-
-Playwright will be introduced for critical user journeys.
-
-```text
-Boot
-  ↓
-Lock Screen
-  ↓
-Desktop
-  ↓
-Open Application
-  ↓
-Minimize
-  ↓
-Restore
-  ↓
-Close
-```
-
-Additional scenarios will cover Start Menu behavior, keyboard shortcuts, preference persistence, mobile navigation, and restart behavior.
-
----
-
-# ⚡ Performance
-
-Future performance work will focus on measurable improvements rather than unnecessary abstractions.
-
-Planned improvements include:
-
-- React lazy loading
-- Dynamic application loading
-- Suspense boundaries
-- Reduced initial JavaScript execution
-- Bundle-size analysis
-- Asset optimization
-- Application-level code splitting
-- Lighthouse auditing
-- Rendering optimization where profiling identifies a real bottleneck
-
-Performance optimizations will be driven by measurement rather than premature optimization.
-
----
-
-# 🛡 Error Handling
-
-Planned production-hardening improvements include:
-
-- React Error Boundaries
-- Application crash isolation
-- Safe fallback UI
-- Storage failure handling
-- Defensive application loading
-
-The goal is to prevent a failure inside one application from crashing the entire desktop environment.
-
----
-
-# 🔄 CI/CD
-
-Continuous integration will be introduced through GitHub Actions.
-
-```text
-Install
-   ↓
-Lint
-   ↓
-Unit Tests
-   ↓
-E2E Tests
-   ↓
-Production Build
-```
-
-Planned checks:
+The current test setup is deliberately small. One Vitest test exercises the Notes storage utility: it saves notes, filters malformed or duplicate entries, and loads the result back from localStorage. jsdom and jest-dom are configured; React Testing Library is available for component tests as coverage grows. This is a starting point, not comprehensive test coverage.
 
 ```bash
 npm run lint
-npm run test
+npm run test:run
 npm run build
 ```
 
-Playwright validation will be added after the E2E setup is complete.
+Use `npm test` for Vitest watch mode while developing.
 
----
+## Accessibility
 
-# 📲 PWA
+The interface includes keyboard shortcuts, visible focus styles, named controls, selected-state announcements, and focus handling when windows and menus open or close. Motion styles respect `prefers-reduced-motion`, and mobile apps use touch-friendly full-screen layouts.
 
-A future PWA phase will add:
+A complete keyboard and screen-reader audit is still planned; the current implementation should not be treated as a finished accessibility certification.
 
-- Web App Manifest
-- Installable application experience
-- Application icons
-- Standalone display mode
-- Basic offline support
-- Cached application shell
+## Performance
 
-The goal is to allow NebulaDesk to behave more like an installed application without introducing a backend.
+Vite produces a static production build, and the app needs no server-side API to navigate portfolio content. Persistent data is kept locally, while transient window state is recreated for each desktop session.
 
----
+No published performance score is claimed yet. Bundle size, image and audio loading, and behavior on lower-powered mobile devices are areas for a measured production audit before release.
 
-# 🌐 Deployment
+## Installation
 
-NebulaDesk is completely frontend-only and requires no backend, database, API keys, authentication service, or runtime secrets.
-
-A production build can be generated with:
-
-```bash
-npm run build
-```
-
-The generated production files are placed inside:
-
-```text
-dist/
-```
-
-A public production deployment will be added before the `v1.0.0` release.
-
----
-
-# 🧭 Roadmap
-
-NebulaDesk has reached the point where adding more applications provides less value than improving the engineering quality of the existing system.
-
-Future development therefore focuses on **reliability, testing, performance, deployment, accessibility, and maintainability**.
-
-## Phase 1 — Automated Testing
-
-- [ ] Add Vitest
-- [ ] Add React Testing Library
-- [ ] Test storage utilities
-- [ ] Test persistent preferences
-- [ ] Test application registry
-- [ ] Test Start Menu
-- [ ] Test Window Manager behavior
-
-## Phase 2 — End-to-End Testing
-
-- [ ] Add Playwright
-- [ ] Test boot-to-desktop flow
-- [ ] Test application lifecycle
-- [ ] Test minimize / restore behavior
-- [ ] Test keyboard shortcuts
-- [ ] Test persistence
-- [ ] Test mobile navigation
-
-## Phase 3 — CI/CD
-
-- [ ] Add GitHub Actions
-- [ ] Run lint automatically
-- [ ] Run tests automatically
-- [ ] Validate production builds
-- [ ] Run E2E tests in CI
-
-## Phase 4 — Reliability
-
-- [ ] Add Error Boundaries
-- [ ] Isolate application failures
-- [ ] Improve fallback interfaces
-- [ ] Strengthen defensive storage handling
-
-## Phase 5 — Performance
-
-- [ ] Introduce lazy-loaded applications
-- [ ] Add code splitting
-- [ ] Analyze bundle size
-- [ ] Optimize heavy assets
-- [ ] Run Lighthouse audits
-- [ ] Improve measurable performance bottlenecks
-
-## Phase 6 — PWA
-
-- [ ] Add Web App Manifest
-- [ ] Add install support
-- [ ] Add application icons
-- [ ] Add standalone mode
-- [ ] Add basic offline support
-
-## Phase 7 — Production Release
-
-- [ ] Deploy production version
-- [ ] Add Live Demo link
-- [ ] Add screenshots
-- [ ] Add demo GIF
-- [ ] Final accessibility audit
-- [ ] Final responsive audit
-- [ ] Final performance audit
-- [ ] Publish `v1.0.0`
-
----
-
-# 🎯 Project Scope
-
-A deliberate part of NebulaDesk's roadmap is knowing **what not to build**.
-
-NebulaDesk already contains enough applications to demonstrate its desktop architecture. The project is therefore **not focused on continuously adding small novelty applications**.
-
-Examples that are intentionally not part of the current roadmap include:
-
-- Calculator
-- Weather
-- Calendar
-- Chat application
-- Additional mini-games
-- Large numbers of small utility apps
-
-Adding ten more applications would increase the size of the project without significantly demonstrating new frontend engineering skills.
-
-The priority instead is:
-
-```text
-More Features ❌
-
-Better Engineering ✅
-Better Testing ✅
-Better Accessibility ✅
-Better Performance ✅
-Better Reliability ✅
-Better Documentation ✅
-Better Deployment ✅
-```
-
-NebulaDesk is intended to become a polished engineering portfolio project rather than simply a collection of mini applications.
-
----
-
-# 🧠 Challenges
-
-## Building a Reusable Window System
-
-One of the main challenges was designing windows that could support multiple independent applications while sharing common behaviors such as focus, minimize, restore, maximize, close, and positioning.
-
-The solution was to separate application metadata and application UI from the window-management system.
-
-## Desktop and Mobile Interaction Models
-
-A desktop window interface does not translate directly to mobile devices.
-
-```text
-Desktop → Window-based applications
-Mobile  → Fullscreen applications
-```
-
-This keeps the operating-system concept while maintaining usability across device sizes.
-
-## Persistent State vs Runtime State
-
-NebulaDesk intentionally persists preferences, notes, music volume, and game score while resetting runtime system state such as open windows, window positions, and current focus.
-
-This distinction keeps persistence predictable and avoids restoring stale desktop sessions unexpectedly.
-
-## Accessibility in an OS-Like Interface
-
-NebulaDesk required careful handling of keyboard navigation, focus management, accessible control names, selected-state communication, reduced motion, and touch interactions.
-
-This made accessibility part of the architecture instead of a final visual adjustment.
-
----
-
-# 📚 What I Learned
-
-Building NebulaDesk strengthened my understanding of:
-
-- Designing reusable React components
-- Separating application and system responsibilities
-- Managing shared and local state
-- Building reusable UI architecture
-- Designing configuration-driven systems
-- Browser persistence
-- Native browser APIs
-- Responsive interaction design
-- Keyboard accessibility
-- Focus management
-- Pointer-based interfaces
-- Canvas interactions
-- Audio handling
-- Designing desktop and mobile experiences from the same application architecture
-- Knowing when **not** to add another feature
-
-One of the most important lessons from the project has been that a project does not become more impressive simply by having more features.
-
-After reaching a strong functional scope, improving **testing, maintainability, performance, accessibility, and reliability** provides significantly more engineering value.
-
----
-
-# ▶️ Getting Started
-
-Clone the project and install dependencies:
+Use a Node.js version supported by the installed Vite release, then run:
 
 ```bash
 npm install
-```
-
-Start the development server:
-
-```bash
 npm run dev
 ```
 
-Vite will display the local development URL in the terminal.
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the local development server |
+| `npm run lint` | Check the source with oxlint |
+| `npm test` | Run Vitest in watch mode |
+| `npm run test:run` | Run tests once |
+| `npm run build` | Create the production build in `dist/` |
+| `npm run preview` | Preview that build locally |
 
----
+## Challenges
 
-# 📜 Available Scripts
+- **One window system, many apps.** Window focus, movement, and lifecycle are centralized so each app can concentrate on its own content.
+- **Desktop and mobile behavior.** Floating windows work on desktop, while the same app content is presented full-screen on small screens.
+- **Persistent versus temporary state.** Notes and preferences should survive a refresh; stale window positions and focus should not.
+- **Keyboard interaction in layered UI.** Shortcuts, menus, windows, and dialogs need predictable focus behavior as users move between them.
 
-### Development
+## What I Learned
 
-```bash
-npm run dev
-```
+Building a desktop metaphor made state ownership more important than the number of apps. Shared app metadata and data files reduce drift between the desktop, Terminal, and portfolio views. Browser storage needs validation and fallbacks, and responsive design sometimes requires a different interaction model rather than a smaller desktop window.
 
-### Lint
+The next useful work is deeper testing, accessibility review, and measured performance improvements. The feature set is already broad enough to demonstrate the idea.
 
-```bash
-npm run lint
-```
+## Personalize This Portfolio
 
-### Production Build
+Your public content lives mainly in `src/data/`:
 
-```bash
-npm run build
-```
+| File | Update |
+| --- | --- |
+| [`profile.js`](src/data/profile.js) | Name, role, bio, location, email, experience, education, interests |
+| [`socials.js`](src/data/socials.js) | Public profile labels and URLs |
+| [`projects.js`](src/data/projects.js) | Project descriptions, technologies, links, screenshots, challenges |
+| [`skills.js`](src/data/skills.js) | Skills, categories, and levels |
+| [`gallery.js`](src/data/gallery.js) | Images, captions, categories, and alt text |
 
-### Preview
+Put new images in `src/assets/` and import them from the relevant data file. Update [`index.html`](index.html) for the browser title and description, and [`favicon.svg`](src/assets/favicon.svg) for the icon. Review contact links and personal details before publishing.
 
-```bash
-npm run preview
-```
+## Roadmap and Scope
 
-Testing commands will be documented here once the automated testing phase is completed.
+The next milestones focus on engineering quality:
 
----
+- Expand meaningful unit and component tests around shared behavior and important user flows.
+- Audit keyboard use, screen-reader behavior, and mobile layouts.
+- Measure production performance and improve loading where the results justify it.
+- Publish a live demo, add release screenshots, and choose a license.
 
-# 📌 Project Philosophy
-
-NebulaDesk started as a creative frontend portfolio experiment.
-
-Its long-term goal is:
-
-> **Build a small but polished frontend system that demonstrates thoughtful architecture, interaction design, accessibility, and engineering quality.**
-
-The next milestone is therefore not another desktop application. It is making the existing desktop more reliable, testable, performant, and production-ready.
-
----
-
-## 👩‍💻 Author
-
-**Mohadese Esmaeilzadeh**
-
-Frontend Developer focused on React, JavaScript, responsive interfaces, and building polished user experiences.
-
----
-
-## 📄 License
-
-A license has not been added yet.
-
-License selection will be finalized before the first stable release.
+Calculator, Weather, Calendar, a Chat app, and a long list of extra mini-apps are **intentionally out of scope**. NebulaDesk already has enough features; improving reliability, accessibility, maintainability, and performance will make the project stronger than adding ten more icons to the desktop.
